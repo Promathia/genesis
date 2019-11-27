@@ -1,5 +1,6 @@
 package com.home.genesis;
 
+import com.home.genesis.representation.controllers.WorldController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,10 +19,12 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("/primary"));
+        WorldController worldController = new WorldController();
+        worldController.initializeWorldMatrix(stage);
+        /*scene = new Scene(loadFXML("/primary"));
         scene.getStylesheets().add(App.class.getResource("/styles.css").toExternalForm());
         stage.setScene(scene);
-        stage.show();
+        stage.show();*/
     }
 
     public static void setRoot(final String fxml) throws IOException {
