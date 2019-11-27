@@ -1,9 +1,9 @@
 package com.home.genesis.logic.entity;
 
-public class Obstacle extends Cell {
+public class Poison extends Cell {
 
     @Override
     public CellType getType() {
-        return CellType.OBSTACLE;
+        return CellType.POISON;
     }
 }

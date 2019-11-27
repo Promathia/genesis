@@ -7,7 +7,7 @@ public class World {
 
     private int sizeX;
     private int sizeY;
-    private Set<Obstacle> obstacleList = new HashSet<>();
+    private Set<Cell> obstacles = new HashSet<>();
 
     public World() {
     }
@@ -17,10 +17,10 @@ public class World {
         this.sizeY = sizeY;
     }
 
-    public World(int sizeX, int sizeY, Set<Obstacle> obstacleList) {
+    public World(int sizeX, int sizeY, Set<Cell> obstacles) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
-        this.obstacleList = obstacleList;
+        this.obstacles = obstacles;
     }
 
     public int getSizeX() {
@@ -39,12 +39,12 @@ public class World {
         this.sizeY = sizeY;
     }
 
-    public Set<Obstacle> getObstacleList() {
-        return obstacleList;
+    public Set<Cell> getObstacles() {
+        return obstacles;
     }
 
-    public void setObstacleList(Set<Obstacle> obstacleList) {
-        this.obstacleList = obstacleList;
+    public void setObstacles(Set<Cell> obstacles) {
+        this.obstacles = obstacles;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class World {
         return "World{" +
                 "sizeX=" + sizeX +
                 ", sizeY=" + sizeY +
-                ", obstacleList=" + obstacleList +
+                ", obstacleList=" + obstacles +
                 '}';
     }
 }
