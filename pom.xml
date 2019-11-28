@@ -43,7 +43,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.3</version>
                 <configuration>
-                    <mainClass>com.home.genesis.App</mainClass>
+                    <mainClass>com.home.genesis.general.LifeSimulator</mainClass>
                 </configuration>
             </plugin>
         </plugins>

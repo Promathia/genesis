@@ -1,30 +1,27 @@
 package com.home.genesis.logic.entity;
 
+import com.home.genesis.general.CellType;
+import com.home.genesis.general.Constants;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class SingleBot {
+public class SingleBot extends Cell {
 
-    private int positionX;
-    private int positionY;
-    private List<Integer> dnaCommands = new ArrayList<>();
+    private List<Integer> dnaCommands = new ArrayList<>(Constants.BOT_DNA_COMMANDS);
     private int currentStep;
     private int health;
 
-    public int getPositionX() {
-        return positionX;
-    }
-
-    public void setPositionX(int positionX) {
-        this.positionX = positionX;
-    }
-
-    public int getPositionY() {
-        return positionY;
-    }
-
-    public void setPositionY(int positionY) {
-        this.positionY = positionY;
+    public SingleBot(int positionX, int positionY) {
+        super(positionX, positionY, CellType.BOT);
+        Random random = new Random(positionX * positionY);
+        for (int i = 0; i < Constants.BOT_DNA_COMMANDS; i++) {
+            int command = random.nextInt(Constants.BOT_DNA_COMMANDS);
+            dnaCommands.add(command);
+        }
+        this.health = Constants.BOT_INITIAL_HEALTH;
+        this.currentStep = 0;
     }
 
     public List<Integer> getDnaCommands() {

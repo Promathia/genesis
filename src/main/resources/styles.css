@@ -1,3 +1,39 @@
-.button {
-    -fx-text-fill: blue;
+.root-pane {
+    -fx-background-color: #1a212e;
+}
+
+.empty-tile {
+    -fx-fill: #1a212e;
+    -fx-stroke: #003e00;
+    -fx-stroke-width: 2;
+}
+
+.poison-tile {
+    -fx-fill: #b12100;
+    -fx-stroke: #003e00;
+    -fx-stroke-width: 2;
+}
+
+.bot-tile {
+    -fx-fill: #0086c8;
+    -fx-stroke: #003e00;
+    -fx-stroke-width: 2;
+}
+
+.obstacle-tile {
+    -fx-fill: #505552;
+    -fx-stroke: #003e00;
+    -fx-stroke-width: 2;
+}
+
+.food-tile {
+    -fx-fill: #03b100;
+    -fx-stroke: #003e00;
+    -fx-stroke-width: 2;
+}
+
+.active-tile {
+    -fx-fill: #7dc8c1;
+    -fx-stroke: #003e00;
+    -fx-stroke-width: 2;
 }

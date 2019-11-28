@@ -1,9 +1,11 @@
 package com.home.genesis.logic.entity;
 
+import com.home.genesis.general.CellType;
+
 public class Poison extends Cell {
 
-    @Override
-    public CellType getType() {
-        return CellType.POISON;
+    public Poison(int positionX, int positionY) {
+        super(positionX, positionY, CellType.POISON);
     }
+
 }
