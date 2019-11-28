@@ -1,4 +1,4 @@
-package com.home.genesis.general;
+package com.home.genesis;
 
 public abstract class Constants {
 

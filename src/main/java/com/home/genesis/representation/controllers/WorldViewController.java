@@ -1,6 +1,6 @@
 package com.home.genesis.representation.controllers;
 
-import com.home.genesis.general.Constants;
+import com.home.genesis.Constants;
 import com.home.genesis.logic.entity.Cell;
 import com.home.genesis.logic.entity.SingleBot;
 import com.home.genesis.representation.Styles;
@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.home.genesis.general.Constants.TILE_SIZE;
+import static com.home.genesis.Constants.TILE_SIZE;
 
 public class WorldViewController {
 

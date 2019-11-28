@@ -1,7 +1,7 @@
 package com.home.genesis.representation.service;
 
-import com.home.genesis.general.CellType;
-import com.home.genesis.general.Constants;
+import com.home.genesis.logic.CellType;
+import com.home.genesis.Constants;
 import com.home.genesis.logic.entity.Cell;
 import com.home.genesis.representation.Styles;
 import com.home.genesis.representation.entity.Tile;

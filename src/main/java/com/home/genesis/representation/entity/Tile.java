@@ -1,6 +1,6 @@
 package com.home.genesis.representation.entity;
 
-import static com.home.genesis.general.Constants.TILE_SIZE;
+import static com.home.genesis.Constants.TILE_SIZE;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;

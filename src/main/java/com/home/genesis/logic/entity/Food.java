@@ -1,6 +1,6 @@
 package com.home.genesis.logic.entity;
 
-import com.home.genesis.general.CellType;
+import com.home.genesis.logic.CellType;
 
 public class Food extends Cell {
 

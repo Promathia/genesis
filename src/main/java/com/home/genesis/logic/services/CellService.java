@@ -1,7 +1,7 @@
 package com.home.genesis.logic.services;
 
-import com.home.genesis.general.CellType;
-import com.home.genesis.general.Constants;
+import com.home.genesis.logic.CellType;
+import com.home.genesis.Constants;
 import com.home.genesis.logic.entity.*;
 
 import java.util.HashSet;

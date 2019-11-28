@@ -14,8 +14,7 @@ public final class LifeSimulator extends Application {
     public void start(final Stage stage) {
         final LifeSimulatorService lifeSimulatorService = new LifeSimulatorService();
         lifeSimulatorService.drawScene(stage, "/styles.css");
+        lifeSimulatorService.startLifeSimulation();
     }
-
-
 
 }

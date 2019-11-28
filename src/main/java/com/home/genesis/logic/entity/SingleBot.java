@@ -1,7 +1,7 @@
 package com.home.genesis.logic.entity;
 
-import com.home.genesis.general.CellType;
-import com.home.genesis.general.Constants;
+import com.home.genesis.logic.CellType;
+import com.home.genesis.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
