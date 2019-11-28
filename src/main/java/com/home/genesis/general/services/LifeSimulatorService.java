@@ -1,6 +1,8 @@
 package com.home.genesis.general.services;
 
 import com.home.genesis.general.LifeSimulator;
+import com.home.genesis.logic.CellType;
+import com.home.genesis.logic.actions.ActionsResult;
 import com.home.genesis.logic.actions.GrabActionType;
 import com.home.genesis.logic.actions.MoveActionType;
 import com.home.genesis.logic.context.SimulatorContext;
@@ -46,13 +48,13 @@ public class LifeSimulatorService {
         }
     }
 
-    private int doTakeDecision(final int currentAction, Cell[][] cellsArray) {
+    private int doTakeDecision(final int currentAction, SingleBot bot, Cell[][] cellsArray) {
         int movePointerToPosition = 0;
         if (currentAction < 8) {
             MoveActionType moveActionType = MoveActionType.values()[currentAction];
             int x = moveActionType.getX();
             int y = moveActionType.getY();
-            checkMoveAction(x, y, cellsArray);
+            ActionsResult actionsResult = checkMoveAction(x, y, bot, cellsArray);
         } else if (currentAction < 16) {
             GrabActionType grabActionType = GrabActionType.values()[currentAction];
         } else if (currentAction < 24) {
@@ -61,6 +63,18 @@ public class LifeSimulatorService {
 
         }
         return movePointerToPosition;
+    }
+
+    private ActionsResult checkMoveAction(int x, int y, SingleBot bot, Cell[][] cellsArray) {
+        int resultX = bot.getPositionX() + x;
+        int resultY = bot.getPositionY() + y;
+        Cell cell = cellsArray[resultX][resultY];
+        CellType cellType = cell.getCellType();
+        if (cellType.equals(CellType.BOT) ||
+            cellType.equals(CellType.OBSTACLE)) {
+            return ActionsResult.BOT_DOES_NOTHING;
+        }
+
     }
 
     private class RunSimulation implements Runnable {
