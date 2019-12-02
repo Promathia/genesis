@@ -2,15 +2,20 @@ package com.home.genesis.logic.services;
 
 import com.home.genesis.logic.CellType;
 import com.home.genesis.Constants;
+import com.home.genesis.logic.context.SimulatorContext;
 import com.home.genesis.logic.entity.*;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class CellService {
 
-    public Set<Cell> getInitialCells() {
+    private SimulatorContext simulatorContext;
+
+    public CellService() {
+        this.simulatorContext = SimulatorContext.getInstance();
+    }
+
+    public List<Cell> getInitialCells() {
         final int totalCellNumber = Constants.CELL_NUMBER_X * Constants.CELL_NUMBER_Y;
         final Set<Cell> cells = new HashSet<>(totalCellNumber);
         createFrameOfObstacles(cells);
@@ -18,34 +23,47 @@ public class CellService {
         populateCellsCollection(cells, CellType.FOOD, Constants.FOOD_NUMBER);
         populateCellsCollection(cells, CellType.POISON, Constants.POISON_NUMBER);
         populateCellsCollection(cells, CellType.BOT, Constants.BOT_MAX_NUMBER);
-        return cells;
+        addEmptyCells(cells);
+        return new ArrayList<>(cells);
     }
 
-    private void createFrameOfObstacles(Set<Cell> cells) {
-        for (int x = 0; x < Constants.CELL_NUMBER_X; x++) {
-            cells.add(getCell(x, 0, CellType.OBSTACLE));
-            cells.add(getCell(x, Constants.CELL_NUMBER_Y - 1, CellType.OBSTACLE)); //-1 is used as this is max not counting 0
-        }
-        for (int y = 1; y < Constants.CELL_NUMBER_Y - 1; y++) { //we exclude first and last as they were already created for x
-            cells.add(getCell(0, y, CellType.OBSTACLE));
-            cells.add(getCell(Constants.CELL_NUMBER_X - 1, y, CellType.OBSTACLE)); //-1 is used as this is max not counting 0
-        }
-    }
-
-    private void populateCellsCollection(final Set<Cell> cells, CellType cellType, int number) {
+    public Cell generateCell(final CellType cellType) {
         final Random random = new Random();
-        for (int i = 0; i < number; i++) {
-            boolean isAdded;
-            do {
-                int initialX = random.nextInt(Constants.CELL_NUMBER_X);
-                int initialY = random.nextInt(Constants.CELL_NUMBER_Y);
-                Cell cell = getCell(initialX, initialY, cellType);
-                isAdded = !cells.add(cell);
-            } while (isAdded);
-        }
+        Cell[][] cellsArray = simulatorContext.getCellsArray();
+        Cell newCell = null;
+        int initialX;
+        int initialY;
+        boolean cellAdded = false;
+        do {
+            initialX = random.nextInt(Constants.CELL_NUMBER_X);
+            initialY = random.nextInt(Constants.CELL_NUMBER_Y);
+            Cell cell = cellsArray[initialX][initialY];
+            if (cell.getCellType() == CellType.EMPTY) {
+                newCell = this.createCell(initialX, initialY, cellType);
+                cellsArray[initialX][initialY] = newCell;
+                cellAdded = true;
+            }
+        } while (!cellAdded);
+        return newCell;
     }
 
-    private Cell getCell(int initialX, int initialY, CellType cellType) {
+    public Cell getEmptyCell() {
+        final Random random = new Random();
+        Cell[][] cellsArray = simulatorContext.getCellsArray();
+        Cell cell;
+        boolean cellFound = false;
+        do {
+            int x = random.nextInt(Constants.CELL_NUMBER_X);
+            int y = random.nextInt(Constants.CELL_NUMBER_Y);
+            cell = cellsArray[x][y];
+            if (cell.getCellType() == CellType.EMPTY) {
+                cellFound = true;
+            }
+        } while (!cellFound);
+        return cell;
+    }
+
+    public Cell createCell(final int initialX, final int initialY, final CellType cellType) {
         Cell cell;
         switch (cellType) {
             case OBSTACLE:
@@ -66,4 +84,35 @@ public class CellService {
         return cell;
     }
 
+    private void createFrameOfObstacles(final Set<Cell> cells) {
+        for (int x = 0; x < Constants.CELL_NUMBER_X; x++) {
+            cells.add(this.createCell(x, 0, CellType.OBSTACLE));
+            cells.add(this.createCell(x, Constants.CELL_NUMBER_Y - 1, CellType.OBSTACLE)); //-1 is used as this is max not counting 0
+        }
+        for (int y = 1; y < Constants.CELL_NUMBER_Y - 1; y++) { //we exclude first and last as they were already created for x
+            cells.add(this.createCell(0, y, CellType.OBSTACLE));
+            cells.add(this.createCell(Constants.CELL_NUMBER_X - 1, y, CellType.OBSTACLE)); //-1 is used as this is max not counting 0
+        }
+    }
+
+    private void addEmptyCells(final Set<Cell> cells) {
+        for (int x = 1; x < Constants.CELL_NUMBER_X - 1; x++) {
+            for (int y = 1; y < Constants.CELL_NUMBER_Y - 1; y++) {
+                cells.add(this.createCell(x, y, CellType.EMPTY));
+            }
+        }
+    }
+
+    private void populateCellsCollection(final Set<Cell> cells, final CellType cellType, final int number) {
+        final Random random = new Random();
+        for (int i = 0; i < number; i++) {
+            boolean isAdded;
+            do {
+                int initialX = random.nextInt(Constants.CELL_NUMBER_X);
+                int initialY = random.nextInt(Constants.CELL_NUMBER_Y);
+                Cell cell = this.createCell(initialX, initialY, cellType);
+                isAdded = !cells.add(cell);
+            } while (isAdded);
+        }
+    }
 }

@@ -5,12 +5,26 @@ import com.home.genesis.Constants;
 import com.home.genesis.logic.entity.Cell;
 import com.home.genesis.representation.Styles;
 import com.home.genesis.representation.entity.Tile;
+import javafx.scene.layout.Pane;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class WorldControllerService {
 
-    public Tile[][] getTiles(final Set<Cell> initialCells) {
+    public Pane initializeView(final Tile[][] tilesArray) {
+        final Pane rootPane = new Pane();
+        rootPane.setPrefSize(Constants.SIZE_X, Constants.SIZE_Y);
+        rootPane.getStyleClass().add(Styles.ROOT_PANE.getStyleName());
+        rootPane.getChildren().addAll(Arrays.stream(tilesArray)
+                .flatMap(Arrays::stream)
+                .collect(Collectors.toList()));
+        return rootPane;
+    }
+
+    public Tile[][] getTiles(final List<Cell> initialCells) {
         final Tile[][] tileArray = new Tile[Constants.CELL_NUMBER_X][Constants.CELL_NUMBER_Y];
         initializeTilesAsEmpty(tileArray, CellType.EMPTY);
         for (Cell cell : initialCells) {

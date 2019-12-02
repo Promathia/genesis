@@ -14,6 +14,14 @@ public class SingleBot extends Cell {
     private int health;
     private int direction;
 
+    public SingleBot(List<Integer> dnaCommands, int positionX, int positionY) {
+        super(positionX, positionY, CellType.BOT);
+        this.dnaCommands.addAll(dnaCommands);
+        this.direction = 0; //TODO
+        this.health = Constants.BOT_INITIAL_HEALTH;
+        this.currentStep = 0;
+    }
+
     public SingleBot(int positionX, int positionY) {
         super(positionX, positionY, CellType.BOT);
         Random random = new Random(positionX * positionY);

@@ -11,16 +11,22 @@ public abstract class Constants {
     public static final int OBSTACLE_NUMBER_ON_MAP = 4;
     public static final int OBSTACLE_SIZE = 5;
 
-    public static final int BOT_INITIAL_HEALTH = 30;
-    public static final int BOT_MAX_HEALTH = 70;
+    public static final int BOT_INITIAL_HEALTH = 10;
+    public static final int BOT_MAX_HEALTH = 90;
     public static final int BOT_DNA_COMMANDS = 64;
     public static final int BOT_MIN_NUMBER = 8;
-    public static final int BOT_MAX_NUMBER = 64;
+    public static final int BOT_MAX_NUMBER = 16;
+    public static final int BOT_CONSUMES_CALORIES = 1;
+
+    public static final int MAX_MUTATIONS_PER_GENERATION = 3;
 
     public static final int FOOD_CALORIES = 10;
     public static final int FOOD_NUMBER = 30;
 
-    public static final int POISON_NUMBER = 20;
+    public static final int POISON_NUMBER = 30;
+
+    public static final int DEFAULT_ACTION_NUMBER = 8;
+
 
     /*
     * this three commands include pointer transfer in DNA
