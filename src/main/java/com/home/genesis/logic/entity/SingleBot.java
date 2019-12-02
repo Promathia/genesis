@@ -12,6 +12,7 @@ public class SingleBot extends Cell {
     private List<Integer> dnaCommands = new ArrayList<>(Constants.BOT_DNA_COMMANDS);
     private int currentStep;
     private int health;
+    private int direction;
 
     public SingleBot(int positionX, int positionY) {
         super(positionX, positionY, CellType.BOT);
@@ -20,6 +21,7 @@ public class SingleBot extends Cell {
             int command = random.nextInt(Constants.BOT_DNA_COMMANDS);
             dnaCommands.add(command);
         }
+        this.direction = 0; //TODO
         this.health = Constants.BOT_INITIAL_HEALTH;
         this.currentStep = 0;
     }
@@ -46,5 +48,13 @@ public class SingleBot extends Cell {
 
     public void setHealth(int health) {
         this.health = health;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
     }
 }

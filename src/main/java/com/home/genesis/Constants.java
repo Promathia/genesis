@@ -2,9 +2,9 @@ package com.home.genesis;
 
 public abstract class Constants {
 
-    public static final int SIZE_X = 1800;
-    public static final int SIZE_Y = 760;
-    public static final int TILE_SIZE = 30;
+    public static final int SIZE_X = 1300;
+    public static final int SIZE_Y = 560;
+    public static final int TILE_SIZE = 20;
     public static final int CELL_NUMBER_X = 50;
     public static final int CELL_NUMBER_Y = 25;
 

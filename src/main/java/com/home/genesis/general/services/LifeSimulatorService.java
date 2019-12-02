@@ -6,6 +6,7 @@ import com.home.genesis.logic.actions.ActionsResult;
 import com.home.genesis.logic.actions.GrabActionType;
 import com.home.genesis.logic.actions.MoveActionType;
 import com.home.genesis.logic.context.SimulatorContext;
+import com.home.genesis.logic.entity.ActionResultBundle;
 import com.home.genesis.logic.entity.Cell;
 import com.home.genesis.logic.entity.SingleBot;
 import com.home.genesis.representation.controllers.WorldViewController;
@@ -13,7 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.util.Set;
+import java.util.*;
 
 public class LifeSimulatorService {
 
@@ -40,11 +41,11 @@ public class LifeSimulatorService {
         Set<SingleBot> bots = simulatorContext.getBots();
         Cell[][] cellsArray = simulatorContext.getCellsArray();
         for (SingleBot bot : bots) {
-            int positionX = bot.getPositionX();
-            int positionY = bot.getPositionY();
+            //int positionX = bot.getPositionX();
+            //int positionY = bot.getPositionY();
             int currentStep = bot.getCurrentStep();
             int currentAction = bot.getDnaCommands().get(currentStep);
-            int movePointerToPosition = doTakeDecision(currentAction);
+            int movePointerToPosition = doTakeDecision(currentAction, bot, cellsArray);
         }
     }
 
@@ -54,7 +55,8 @@ public class LifeSimulatorService {
             MoveActionType moveActionType = MoveActionType.values()[currentAction];
             int x = moveActionType.getX();
             int y = moveActionType.getY();
-            ActionsResult actionsResult = checkMoveAction(x, y, bot, cellsArray);
+            ActionsResult actionsResult = getMoveActionResult(x, y, bot, cellsArray);
+
         } else if (currentAction < 16) {
             GrabActionType grabActionType = GrabActionType.values()[currentAction];
         } else if (currentAction < 24) {
@@ -65,16 +67,28 @@ public class LifeSimulatorService {
         return movePointerToPosition;
     }
 
-    private ActionsResult checkMoveAction(int x, int y, SingleBot bot, Cell[][] cellsArray) {
+    private void handleActionResult(SingleBot bot, ActionsResult actionsResult) {
+        ActionResultBundle actionResultBundle = new ActionResultBundle();
+        if (actionsResult.equals(ActionsResult.BOT_DIES)) {
+
+        }
+    }
+
+    private ActionsResult getMoveActionResult(int x, int y, SingleBot bot, Cell[][] cellsArray) {
         int resultX = bot.getPositionX() + x;
         int resultY = bot.getPositionY() + y;
         Cell cell = cellsArray[resultX][resultY];
         CellType cellType = cell.getCellType();
-        if (cellType.equals(CellType.BOT) ||
-            cellType.equals(CellType.OBSTACLE)) {
+        if (cellType == CellType.BOT ||
+            cellType == CellType.OBSTACLE) {
             return ActionsResult.BOT_DOES_NOTHING;
+        } else if (cellType == CellType.FOOD) {
+            return ActionsResult.BOT_EATS;
+        } else if (cellType == CellType.POISON) {
+            return ActionsResult.BOT_DIES;
+        } else {
+            return ActionsResult.BOT_MOVES;
         }
-
     }
 
     private class RunSimulation implements Runnable {
