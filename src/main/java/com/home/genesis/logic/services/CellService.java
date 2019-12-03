@@ -33,22 +33,21 @@ public class CellService {
         Cell newCell = null;
         int initialX;
         int initialY;
-        boolean cellAdded = false;
+        boolean cellGenerated = false;
         do {
             initialX = random.nextInt(Constants.CELL_NUMBER_X);
             initialY = random.nextInt(Constants.CELL_NUMBER_Y);
             Cell cell = cellsArray[initialX][initialY];
             if (cell.getCellType() == CellType.EMPTY) {
                 newCell = this.createCell(initialX, initialY, cellType);
-                cellsArray[initialX][initialY] = newCell;
-                cellAdded = true;
+                cellGenerated = true;
             }
-        } while (!cellAdded);
+        } while (!cellGenerated);
         return newCell;
     }
 
     public Cell getRandomEmptyCell() {
-        final Random random = new Random();
+        final Random random = new Random(System.currentTimeMillis());
         Cell[][] cellsArray = simulatorContext.getCellsArray();
         Cell cell;
         boolean cellFound = false;

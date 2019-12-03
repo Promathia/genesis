@@ -9,6 +9,7 @@ import com.home.genesis.logic.entity.SingleBot;
 import com.home.genesis.logic.services.CellService;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class SimulatorContext {
@@ -20,8 +21,10 @@ public class SimulatorContext {
     private List<Food> food;
     private List<Poison> poison;
     private Cell[][] cellsArray;
+    private AtomicInteger generationCounter;
 
     private SimulatorContext() {
+        generationCounter = new AtomicInteger(0);
     }
 
     public static synchronized SimulatorContext getInstance() {
@@ -83,5 +86,9 @@ public class SimulatorContext {
             });
         }
         return this.cellsArray;
+    }
+
+    public AtomicInteger getGenerationCounter() {
+        return generationCounter;
     }
 }

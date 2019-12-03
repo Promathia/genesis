@@ -20,6 +20,10 @@ public class PoisonService {
 
     public void removePoison(Poison poisonCell) {
         simulatorContext.getPoison().remove(poisonCell);
+        Cell[][] cellsArray = simulatorContext.getCellsArray();
+        int positionX = poisonCell.getPositionX();
+        int positionY = poisonCell.getPositionY();
+        cellsArray[positionX][positionY] = cellService.createCell(positionX, positionY, CellType.EMPTY);
     }
 
     public void addPoison(Poison poisonCell) {
@@ -29,16 +33,10 @@ public class PoisonService {
 
     public Cell generatePoison() {
         Poison poisonCell = (Poison) cellService.generateCell(CellType.POISON);
-        //Cell[][] cellsArray = simulatorContext.getCellsArray();
-        //cellsArray[poisonCell.getPositionX()][poisonCell.getPositionY()] = poisonCell;
+        Cell[][] cellsArray = simulatorContext.getCellsArray();
+        cellsArray[poisonCell.getPositionX()][poisonCell.getPositionY()] = poisonCell;
         this.addPoison(poisonCell);
         return poisonCell;
     }
 
-    public Food convertPoisonToFood(int resultX, int resultY) {
-        Cell[][] cellsArray = simulatorContext.getCellsArray();
-        Food foodCell = (Food) cellService.createCell(resultX, resultY, CellType.FOOD);
-        cellsArray[resultX][resultY] = foodCell;
-        return foodCell;
-    }
 }

@@ -41,22 +41,23 @@ public class LifeSimulatorService {
         thread.start();
     }
 
-    private void handleBotActions() throws InterruptedException {
+    private void handleBotActions() {
         List<SingleBot> bots = simulatorContext.getBots();
         Cell[][] cellsArray = simulatorContext.getCellsArray();
-        ActionResultBundle actionResultBundle = new ActionResultBundle();
         Collections.shuffle(bots);
-        for (int botIndex = 0; botIndex < bots.size(); botIndex++) {
+        ListIterator<SingleBot> singleBotListIterator = bots.listIterator();
+        while (singleBotListIterator.hasNext()) {
+            ActionResultBundle actionResultBundle = new ActionResultBundle();
             if (bots.size() <= Constants.BOT_MIN_NUMBER) {
-                botService.handleNewBotsCreation(actionResultBundle);
+                botService.handleNewBotsCreation(singleBotListIterator, actionResultBundle);
                 worldViewController.handleActionResults(actionResultBundle);
+                simulatorContext.getGenerationCounter().incrementAndGet();
                 break;
             }
-            SingleBot singleBot = bots.get(botIndex);
+            SingleBot singleBot = singleBotListIterator.next();
             botService.handleBotDecisionTaking(singleBot, cellsArray, actionResultBundle);
-            botService.handleBotDeathOrConsumeCalorie(singleBot, botIndex, actionResultBundle);
+            botService.handleBotDeathOrConsumeCalorie(singleBot, singleBotListIterator, actionResultBundle);
             worldViewController.handleActionResults(actionResultBundle);
-            Thread.sleep(1);
         }
     }
 
@@ -64,8 +65,9 @@ public class LifeSimulatorService {
         @Override
         public void run() {
             while (true) {
+                handleBotActions();
                 try {
-                    handleBotActions();
+                    Thread.sleep(50);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

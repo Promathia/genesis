@@ -3,15 +3,12 @@ package com.home.genesis.representation.controllers;
 import com.home.genesis.logic.actions.ActionsResult;
 import com.home.genesis.logic.entity.ActionResultBundle;
 import com.home.genesis.logic.entity.Cell;
-import com.home.genesis.logic.entity.SingleBot;
 import com.home.genesis.representation.entity.Tile;
 import com.home.genesis.representation.service.WorldControllerService;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 
 import java.util.List;
-import java.util.Set;
-
-import static com.home.genesis.Constants.TILE_SIZE;
 
 public class WorldViewController {
 
@@ -33,27 +30,38 @@ public class WorldViewController {
     }
 
     public void handleActionResults(ActionResultBundle actionResultBundle) {
-        List<ActionResultBundle.Result> results = actionResultBundle.getResults();
-        for (ActionResultBundle.Result result : results) {
-            Tile tile = tilesArray[result.getX()][result.getY()];
-            ActionsResult actionsResult = result.getActionsResult();
-            switch (actionsResult) {
-                case REMOVE:
-                    tile.getTileBackground().getStyleClass().clear();
-                    tile.getTileBackground().getStyleClass().add("empty-tile");
-                    break;
-                case CHANGE_TILE:
-                    tile.getTileBackground().getStyleClass().clear();
-                    tile.getTileBackground().getStyleClass().add(result.getPayload());
-                    break;
-                case CHANGE_TEXT:
-                    tile.getText().setText(result.getPayload());
-                    break;
-                case BOT_TURN:
-                    break;
-                default:
+        Platform.runLater(new GUIUpdate(actionResultBundle));
+    }
+
+    private class GUIUpdate implements Runnable {
+        private ActionResultBundle actionResultBundle;
+        GUIUpdate(final ActionResultBundle actionResultBundle) {
+            this.actionResultBundle = actionResultBundle;
+        }
+        @Override
+        public void run() {
+            List<ActionResultBundle.Result> results = actionResultBundle.getResults();
+            for (ActionResultBundle.Result result : results) {
+                Tile tile = tilesArray[result.getX()][result.getY()];
+                ActionsResult actionsResult = result.getActionsResult();
+                switch (actionsResult) {
+                    case REMOVE:
+                        tile.getTileBackground().getStyleClass().clear();
+                        tile.getTileBackground().getStyleClass().add("empty-tile");
+                        break;
+                    case CHANGE_TILE:
+                        tile.getTileBackground().getStyleClass().clear();
+                        tile.getTileBackground().getStyleClass().add(result.getPayload());
+                        break;
+                    case CHANGE_TEXT:
+                        tile.getText().setText(result.getPayload());
+                        break;
+                    case BOT_TURN:
+                        break;
+                    default:
+                }
             }
         }
-        results.clear();
     }
+
 }
