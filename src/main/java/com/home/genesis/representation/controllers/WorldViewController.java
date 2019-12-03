@@ -41,7 +41,6 @@ public class WorldViewController {
                 case REMOVE:
                     tile.getTileBackground().getStyleClass().clear();
                     tile.getTileBackground().getStyleClass().add("empty-tile");
-                    tile.getText().setText("");
                     break;
                 case CHANGE_TILE:
                     tile.getTileBackground().getStyleClass().clear();

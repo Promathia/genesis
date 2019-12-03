@@ -17,16 +17,20 @@ public class FoodService {
         this.cellService = new CellService();
     }
 
-    public void removeFood(Cell foodCell) {
+    public void removeFood(Food foodCell) {
         simulatorContext.getFood().remove(foodCell);
     }
 
-    public Cell generateFood() {
-        Food cell = (Food) cellService.generateCell(CellType.FOOD);
-        Cell[][] cellsArray = simulatorContext.getCellsArray();
-        cellsArray[cell.getPositionX()][cell.getPositionY()] = cell;
+    public void addFood(Food foodCell) {
         List<Food> foods = simulatorContext.getFood();
-        foods.add(cell);
-        return cell;
+        foods.add(foodCell);
+    }
+
+    public Cell generateFood() {
+        Food foodCell = (Food) cellService.generateCell(CellType.FOOD);
+        //Cell[][] cellsArray = simulatorContext.getCellsArray();
+        //cellsArray[foodCell.getPositionX()][foodCell.getPositionY()] = foodCell;
+        this.addFood(foodCell);
+        return foodCell;
     }
 }

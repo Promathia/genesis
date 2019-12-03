@@ -56,7 +56,7 @@ public class LifeSimulatorService {
             botService.handleBotDecisionTaking(singleBot, cellsArray, actionResultBundle);
             botService.handleBotDeathOrConsumeCalorie(singleBot, botIndex, actionResultBundle);
             worldViewController.handleActionResults(actionResultBundle);
-            Thread.sleep(5);
+            Thread.sleep(1);
         }
     }
 

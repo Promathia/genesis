@@ -42,7 +42,7 @@ public class SimulatorContext {
     }
 
     public List<SingleBot> getBots() {
-        if (this.bots == null || this.bots.isEmpty()) {
+        if (this.bots == null) {
             List<Cell> cells = this.getInitialCells();
             this.bots = cells.stream()
                     .filter(cell -> cell.getCellType().equals(CellType.BOT))
@@ -53,7 +53,7 @@ public class SimulatorContext {
     }
 
     public List<Food> getFood() {
-        if (this.food == null || this.food.isEmpty()) {
+        if (this.food == null) {
             List<Cell> cells = this.getInitialCells();
             this.food = cells.stream()
                     .filter(cell -> cell.getCellType().equals(CellType.FOOD))
@@ -64,7 +64,7 @@ public class SimulatorContext {
     }
 
     public List<Poison> getPoison() {
-        if (this.poison == null || this.poison.isEmpty()) {
+        if (this.poison == null) {
             List<Cell> cells = this.getInitialCells();
             this.poison = cells.stream()
                     .filter(cell -> cell.getCellType().equals(CellType.POISON))
@@ -75,7 +75,7 @@ public class SimulatorContext {
     }
 
     public Cell[][] getCellsArray() {
-        if (this.cellsArray == null || this.cellsArray.length == 0) {
+        if (this.cellsArray == null) {
             this.cellsArray = new Cell[Constants.CELL_NUMBER_X][Constants.CELL_NUMBER_Y];
             List<Cell> cells = this.getInitialCells();
             cells.forEach(cell -> {

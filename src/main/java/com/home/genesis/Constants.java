@@ -15,7 +15,7 @@ public abstract class Constants {
     public static final int BOT_MAX_HEALTH = 90;
     public static final int BOT_DNA_COMMANDS = 64;
     public static final int BOT_MIN_NUMBER = 8;
-    public static final int BOT_MAX_NUMBER = 16;
+    public static final int BOT_MAX_NUMBER = 64;
     public static final int BOT_CONSUMES_CALORIES = 1;
 
     public static final int MAX_MUTATIONS_PER_GENERATION = 3;

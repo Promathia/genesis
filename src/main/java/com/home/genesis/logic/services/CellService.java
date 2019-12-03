@@ -47,7 +47,7 @@ public class CellService {
         return newCell;
     }
 
-    public Cell getEmptyCell() {
+    public Cell getRandomEmptyCell() {
         final Random random = new Random();
         Cell[][] cellsArray = simulatorContext.getCellsArray();
         Cell cell;

@@ -14,9 +14,9 @@ public class SingleBot extends Cell {
     private int health;
     private int direction;
 
-    public SingleBot(List<Integer> dnaCommands, int positionX, int positionY) {
+    public SingleBot(List<Integer> sourceDNSCommands, int positionX, int positionY) {
         super(positionX, positionY, CellType.BOT);
-        this.dnaCommands.addAll(dnaCommands);
+        this.dnaCommands.addAll(sourceDNSCommands);
         this.direction = 0; //TODO
         this.health = Constants.BOT_INITIAL_HEALTH;
         this.currentStep = 0;
