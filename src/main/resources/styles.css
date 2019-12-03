@@ -1,39 +1,59 @@
 .root-pane {
     -fx-background-color: #1a212e;
+    -fx-padding: 30;
+}
+
+.world-pane {
+    -fx-background-color: #072c47;
+}
+
+.button-left {
+    -fx-background-image: url(left_arrow.png);
+    -fx-background-size: 20px 20px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: rgba(0,0,0,0);
+}
+
+.button-right {
+    -fx-background-image: url(right_arrow.png);
+    -fx-background-size: 20px 20px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: rgba(0,0,0,0);
 }
 
 .empty-tile {
     -fx-fill: #1a212e;
     -fx-stroke: #003e00;
-    -fx-stroke-width: 2;
+    -fx-stroke-width: 1;
+    -fx-stroke-type: inside;
 }
 
 .poison-tile {
     -fx-fill: #b12100;
     -fx-stroke: #003e00;
-    -fx-stroke-width: 2;
+    -fx-stroke-width: 1;
+    -fx-stroke-type: inside;
 }
 
 .bot-tile {
     -fx-fill: #0086c8;
     -fx-stroke: #003e00;
-    -fx-stroke-width: 2;
+    -fx-stroke-width: 1;
+    -fx-stroke-type: inside;
 }
 
 .obstacle-tile {
     -fx-fill: #505552;
     -fx-stroke: #003e00;
-    -fx-stroke-width: 2;
+    -fx-stroke-width: 1;
+    -fx-stroke-type: inside;
 }
 
 .food-tile {
     -fx-fill: #03b100;
     -fx-stroke: #003e00;
-    -fx-stroke-width: 2;
-}
-
-.active-tile {
-    -fx-fill: #7dc8c1;
-    -fx-stroke: #003e00;
-    -fx-stroke-width: 2;
+    -fx-stroke-width: 1;
+    -fx-stroke-type: inside;
 }

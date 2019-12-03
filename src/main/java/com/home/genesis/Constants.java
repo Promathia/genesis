@@ -27,6 +27,8 @@ public abstract class Constants {
 
     public static final int DEFAULT_ACTION_NUMBER = 8;
 
+    public static final int UPDATE_QUEUE_CAPACITY = 100;
+    public static final int DEFAULT_PAUSE_BETWEEN_BOT_ACTIONS = 100;
 
     /*
     * this three commands include pointer transfer in DNA

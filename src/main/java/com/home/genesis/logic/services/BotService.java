@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static com.home.genesis.Constants.DEFAULT_ACTION_NUMBER;
 
@@ -36,16 +35,20 @@ public class BotService {
             actionPointerMoveTo = currentAction; //from 32 to 63 we just move the pointer to this number
         } else if (currentAction >= (DEFAULT_ACTION_NUMBER * 3)) {
             // we decrease in order to access enum by ordinal
-            TurnActionType turnActionType = TurnActionType.values()[currentAction - DEFAULT_ACTION_NUMBER * 3];
+            final int valueModifiedByCurrentDirection = updateWithCurrentDirection(currentAction - DEFAULT_ACTION_NUMBER * 3, bot.getDirection());
+            TurnActionType turnActionType = TurnActionType.values()[valueModifiedByCurrentDirection];
             actionPointerMoveTo = handleTurnActionResult(turnActionType, bot, actionResultBundle);
         } else if (currentAction >= (DEFAULT_ACTION_NUMBER * 2)) {
-            CheckActionType checkActionType = CheckActionType.values()[currentAction - DEFAULT_ACTION_NUMBER * 2];
+            final int valueModifiedByCurrentDirection = updateWithCurrentDirection(currentAction - DEFAULT_ACTION_NUMBER * 2, bot.getDirection());
+            CheckActionType checkActionType = CheckActionType.values()[valueModifiedByCurrentDirection];
             actionPointerMoveTo = handleCheckActionResult(checkActionType, bot, cellsArray);
         } else if (currentAction >= DEFAULT_ACTION_NUMBER) {
-            GrabActionType grabActionType = GrabActionType.values()[currentAction - DEFAULT_ACTION_NUMBER];
+            final int valueModifiedByCurrentDirection = updateWithCurrentDirection(currentAction - DEFAULT_ACTION_NUMBER, bot.getDirection());
+            GrabActionType grabActionType = GrabActionType.values()[valueModifiedByCurrentDirection];
             actionPointerMoveTo = handleGrabActionResult(grabActionType, bot, cellsArray, actionResultBundle);
         } else {
-            MoveActionType moveActionType = MoveActionType.values()[currentAction];
+            final int valueModifiedByCurrentDirection = updateWithCurrentDirection(currentAction, bot.getDirection());
+            MoveActionType moveActionType = MoveActionType.values()[valueModifiedByCurrentDirection];
             actionPointerMoveTo = handleMoveActionResult(moveActionType, bot, cellsArray, actionResultBundle);
         }
         updateBotActionPointer(bot, actionPointerMoveTo);
@@ -89,8 +92,15 @@ public class BotService {
             cellsArray[positionX][positionY] = copiedBot;
             singleBotListIterator.add(copiedBot);
             actionResultBundle.addActionResult(ActionsResult.CHANGE_TILE, positionX, positionY, Styles.BOT.getStyleName());
-            actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, positionX, positionY, String.valueOf(copiedBot.getHealth()));
+            actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, positionX, positionY, concatHealthAndDirection(copiedBot));
         }
+    }
+
+    private String concatHealthAndDirection(final SingleBot bot) {
+        final int health = bot.getHealth();
+        final int direction = bot.getDirection();
+        TurnActionType turnActionType = TurnActionType.values()[direction];
+        return String.format("%s%s", turnActionType.getArrowSign(), health);
     }
 
     private boolean tryToModifyGenome(final SingleBot bot) {
@@ -106,13 +116,30 @@ public class BotService {
 
     private void decreaseBotHealth(final SingleBot bot, final ActionResultBundle actionResultBundle) {
         bot.setHealth(bot.getHealth() - Constants.BOT_CONSUMES_CALORIES);
-        actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), String.valueOf(bot.getHealth()));
+        actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), concatHealthAndDirection(bot));
     }
 
     private int handleTurnActionResult(final TurnActionType turnActionType, final SingleBot bot, final ActionResultBundle actionResultBundle) {
         bot.setDirection(turnActionType.getTurnDirection());
-        actionResultBundle.addActionResult(ActionsResult.BOT_TURN, bot.getPositionX(), bot.getPositionY(), String.valueOf(turnActionType.getTurnDirection()));
+        actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), concatHealthAndDirection(bot));
         return 1;
+    }
+
+    private int updateWithCurrentDirection(final int actionNumber, final int turnNumber) {
+        /* if for move operation we have the following actionNumbers
+        7 0 1
+        6 B 2
+        5 4 3
+        then if direction 3, and move is 7, then 7 should be on position 1
+        to achieve that we can calc 3 + 7 = 10 - 8 = 2
+        if the number is lesser then 7 -> we return the sum
+        */
+        int intermediateResult = actionNumber + turnNumber;
+        if (intermediateResult > 7) {
+            return intermediateResult - 7;
+        } else {
+            return intermediateResult;
+        }
     }
 
     private int handleCheckActionResult(CheckActionType checkActionType, SingleBot bot, Cell[][] cellsArray) {
@@ -184,7 +211,7 @@ public class BotService {
             handleBotEatsAndMove(resultX, resultY, bot, cellsArray, actionResultBundle);
             return 4;
         } else {
-            handleMoveBot(resultX, resultY, bot, cellsArray, actionResultBundle);
+            handleMoveBot(resultX, resultY, bot, actionResultBundle);
             return 5;
         }
     }
@@ -231,10 +258,10 @@ public class BotService {
         actionResultBundle.addActionResult(ActionsResult.REMOVE, bot.getPositionX(), bot.getPositionY(), null);
         actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), "");
         foodService.removeFood(foodCell);
-        changeBotPosition(bot, resultX, resultY, cellsArray);
+        changeBotPosition(bot, resultX, resultY);
         increaseBotHealth(bot);
         actionResultBundle.addActionResult(ActionsResult.CHANGE_TILE, resultX, resultY, Styles.BOT.getStyleName());
-        //actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, resultX, resultY, String.valueOf(bot.getHealth())); //TODO not required as health is decreased generally
+        //TODO not required as health is decreased generally
         if (simulatorContext.getFood().size() < Constants.FOOD_NUMBER) {
             Food newFoodCell = (Food) foodService.generateFood();
             actionResultBundle.addActionResult(ActionsResult.CHANGE_TILE, newFoodCell.getPositionX(),
@@ -248,14 +275,15 @@ public class BotService {
         bot.setHealth(Math.min(resultHealth, Constants.BOT_MAX_HEALTH));
     }
 
-    private void handleMoveBot(int resultX, int resultY, SingleBot bot, Cell[][] cellsArray, ActionResultBundle actionResultBundle) {
+    private void handleMoveBot(int resultX, int resultY, SingleBot bot, ActionResultBundle actionResultBundle) {
         actionResultBundle.addActionResult(ActionsResult.REMOVE, bot.getPositionX(), bot.getPositionY(), null);
         actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), "");
-        changeBotPosition(bot, resultX, resultY, cellsArray);
+        changeBotPosition(bot, resultX, resultY);
         actionResultBundle.addActionResult(ActionsResult.CHANGE_TILE, resultX, resultY, Styles.BOT.getStyleName());
     }
 
-    private void changeBotPosition(SingleBot bot, int resultX, int resultY, Cell[][] cellsArray) {
+    private void changeBotPosition(SingleBot bot, int resultX, int resultY) {
+        final Cell[][] cellsArray = simulatorContext.getCellsArray();
         cellsArray[bot.getPositionX()][bot.getPositionY()] =
                 cellService.createCell(bot.getPositionX(), bot.getPositionY(), CellType.EMPTY);
         bot.setPositionX(resultX);

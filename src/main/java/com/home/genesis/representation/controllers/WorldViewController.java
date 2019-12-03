@@ -1,9 +1,9 @@
 package com.home.genesis.representation.controllers;
 
-import com.home.genesis.logic.actions.ActionsResult;
 import com.home.genesis.logic.entity.ActionResultBundle;
 import com.home.genesis.logic.entity.Cell;
-import com.home.genesis.representation.entity.Tile;
+import com.home.genesis.representation.entity.GUIUpdater;
+import com.home.genesis.representation.entity.WorldTile;
 import com.home.genesis.representation.service.WorldControllerService;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
@@ -14,54 +14,30 @@ public class WorldViewController {
 
     private WorldControllerService worldControllerService;
 
-    private Tile[][] tilesArray;
+    private WorldTile[][] tilesArray;
 
-    public WorldViewController(final List<Cell> initialCells) {
-        this.worldControllerService = new WorldControllerService();
+    private Pane mainPane;
+
+    public WorldViewController(final List<Cell> initialCells, final int currentActionPauseValue) {
+        this.worldControllerService = new WorldControllerService(currentActionPauseValue);
         this.tilesArray = worldControllerService.getTiles(initialCells);
     }
 
     public Pane initializeView() {
         if (tilesArray == null || tilesArray.length == 0) {
             System.out.println("No tiles created!");
-            return new Pane();
+            mainPane = new Pane();
+            return mainPane;
         }
-        return worldControllerService.initializeView(tilesArray);
+        mainPane = worldControllerService.initializeView(tilesArray);
+        return mainPane;
     }
 
     public void handleActionResults(ActionResultBundle actionResultBundle) {
-        Platform.runLater(new GUIUpdate(actionResultBundle));
+        Platform.runLater(new GUIUpdater(tilesArray, actionResultBundle));
     }
 
-    private class GUIUpdate implements Runnable {
-        private ActionResultBundle actionResultBundle;
-        GUIUpdate(final ActionResultBundle actionResultBundle) {
-            this.actionResultBundle = actionResultBundle;
-        }
-        @Override
-        public void run() {
-            List<ActionResultBundle.Result> results = actionResultBundle.getResults();
-            for (ActionResultBundle.Result result : results) {
-                Tile tile = tilesArray[result.getX()][result.getY()];
-                ActionsResult actionsResult = result.getActionsResult();
-                switch (actionsResult) {
-                    case REMOVE:
-                        tile.getTileBackground().getStyleClass().clear();
-                        tile.getTileBackground().getStyleClass().add("empty-tile");
-                        break;
-                    case CHANGE_TILE:
-                        tile.getTileBackground().getStyleClass().clear();
-                        tile.getTileBackground().getStyleClass().add(result.getPayload());
-                        break;
-                    case CHANGE_TEXT:
-                        tile.getText().setText(result.getPayload());
-                        break;
-                    case BOT_TURN:
-                        break;
-                    default:
-                }
-            }
-        }
+    public int getCurrentActionPauseValue() {
+        return worldControllerService.getCurrentActionPauseValue();
     }
-
 }

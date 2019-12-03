@@ -3,18 +3,18 @@ package com.home.genesis.logic.actions;
 public enum CheckActionType {
 
     /*
-    0 1 2
-    7 B 3
-    6 5 4
+    7 0 1
+    6 B 2
+    5 4 3
     */
-    CHECK_0(-1, 1),
-    CHECK_1(0, 1),
-    CHECK_2(1, 1),
-    CHECK_3(1, 0),
-    CHECK_4(1, -1),
-    CHECK_5(0, -1),
-    CHECK_6(-1, -1),
-    CHECK_7(-1, 0);
+    CHECK_0(0, 1),
+    CHECK_1(1, 1),
+    CHECK_2(1, 0),
+    CHECK_3(1, -1),
+    CHECK_4(0, -1),
+    CHECK_5(-1, -1),
+    CHECK_6(-1, 0),
+    CHECK_7(-1, 1);
 
     private int x;
     private int y;

@@ -3,18 +3,18 @@ package com.home.genesis.logic.actions;
 public enum GrabActionType {
 
     /*
-    0 1 2
-    7 B 3
-    6 5 4
+    7 0 1
+    6 B 2
+    5 4 3
     */
-    GRAB_0(-1, 1),
-    GRAB_1(0, 1),
-    GRAB_2(1, 1),
-    GRAB_3(1, 0),
-    GRAB_4(1, -1),
-    GRAB_5(0, -1),
-    GRAB_6(-1, -1),
-    GRAB_7(-1, 0);
+    GRAB_0(0, 1),
+    GRAB_1(1, 1),
+    GRAB_2(1, 0),
+    GRAB_3(1, -1),
+    GRAB_4(0, -1),
+    GRAB_5(-1, -1),
+    GRAB_6(-1, 0),
+    GRAB_7(-1, 1);
 
     private int x;
     private int y;

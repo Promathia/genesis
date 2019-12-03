@@ -6,7 +6,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-public class Tile extends StackPane {
+public class WorldTile extends StackPane {
 
     private int x;
     private int y;
@@ -14,7 +14,7 @@ public class Tile extends StackPane {
     private Rectangle tileBackground = new Rectangle(TILE_SIZE, TILE_SIZE);
     private Text text = new Text();
 
-    public Tile(final int x, final int y) {
+    public WorldTile(final int x, final int y) {
         this.x = x;
         this.y = y;
         getChildren().addAll(tileBackground, text);

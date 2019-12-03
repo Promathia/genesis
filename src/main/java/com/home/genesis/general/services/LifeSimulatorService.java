@@ -2,77 +2,48 @@ package com.home.genesis.general.services;
 
 import com.home.genesis.Constants;
 import com.home.genesis.general.LifeSimulator;
+import com.home.genesis.general.process.RunSimulation;
+import com.home.genesis.general.process.UpdateUI;
 import com.home.genesis.logic.context.SimulatorContext;
 import com.home.genesis.logic.entity.ActionResultBundle;
-import com.home.genesis.logic.entity.Cell;
-import com.home.genesis.logic.entity.SingleBot;
-import com.home.genesis.logic.services.BotService;
 import com.home.genesis.representation.controllers.WorldViewController;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class LifeSimulatorService {
 
-    private SimulatorContext simulatorContext;
     private WorldViewController worldViewController;
-    private BotService botService;
+    private int pauseTimeBetweenActions = Constants.DEFAULT_PAUSE_BETWEEN_BOT_ACTIONS;
+
+    private final BlockingQueue<ActionResultBundle> resultsQueue = new LinkedBlockingQueue<>(Constants.UPDATE_QUEUE_CAPACITY);
 
     public LifeSimulatorService() {
-        this.simulatorContext = SimulatorContext.getInstance();
-        this.worldViewController = new WorldViewController(simulatorContext.getInitialCells());
-        this.botService = new BotService();
+        this.worldViewController = new WorldViewController(SimulatorContext.getInstance().getInitialCells(), pauseTimeBetweenActions);
     }
 
     public void drawScene(final Stage stage, final String cssPath) {
         final Pane parent = worldViewController.initializeView();
         final Scene scene = new Scene(parent);
         scene.getStylesheets().add(LifeSimulator.class.getResource(cssPath).toExternalForm());
+        stage.setTitle("Life Simulation");
         stage.setScene(scene);
         stage.show();
     }
 
-    public void startLifeSimulation() {
-        final Runnable runnable = new RunSimulation();
-        final Thread thread = new Thread(runnable);
-        thread.setDaemon(true);
-        thread.start();
+    public void startLifeSimulationProcess() {
+        final Thread logicThread = new Thread(new RunSimulation(resultsQueue, this));
+        logicThread.setDaemon(true);
+        logicThread.start();
+        final Thread uiThread = new Thread(new UpdateUI(resultsQueue, worldViewController));
+        uiThread.setDaemon(true);
+        uiThread.start();
     }
 
-    private void handleBotActions() {
-        List<SingleBot> bots = simulatorContext.getBots();
-        Cell[][] cellsArray = simulatorContext.getCellsArray();
-        Collections.shuffle(bots);
-        ListIterator<SingleBot> singleBotListIterator = bots.listIterator();
-        while (singleBotListIterator.hasNext()) {
-            ActionResultBundle actionResultBundle = new ActionResultBundle();
-            if (bots.size() <= Constants.BOT_MIN_NUMBER) {
-                botService.handleNewBotsCreation(singleBotListIterator, actionResultBundle);
-                worldViewController.handleActionResults(actionResultBundle);
-                simulatorContext.getGenerationCounter().incrementAndGet();
-                break;
-            }
-            SingleBot singleBot = singleBotListIterator.next();
-            botService.handleBotDecisionTaking(singleBot, cellsArray, actionResultBundle);
-            botService.handleBotDeathOrConsumeCalorie(singleBot, singleBotListIterator, actionResultBundle);
-            worldViewController.handleActionResults(actionResultBundle);
-        }
+    public int getPauseTimeBetweenActions() {
+        return worldViewController.getCurrentActionPauseValue();
     }
-
-    private class RunSimulation implements Runnable {
-        @Override
-        public void run() {
-            while (true) {
-                handleBotActions();
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
 }
