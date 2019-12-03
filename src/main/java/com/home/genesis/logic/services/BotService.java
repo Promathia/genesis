@@ -28,35 +28,43 @@ public class BotService {
         this.poisonService = new PoisonService();
     }
 
-    public void handleBotDecisionTaking(final SingleBot bot, final Cell[][] cellsArray, final ActionResultBundle actionResultBundle) {
+    public boolean handleBotDecisionTaking(final SingleBot bot, final Cell[][] cellsArray, final ActionResultBundle actionResultBundle) {
         final int currentAction = bot.getDnaCommands().get(bot.getCurrentStep());
         int actionPointerMoveTo = 0;
+        boolean isTerminalOperation;
         if (currentAction >= (DEFAULT_ACTION_NUMBER * 4)) {
             actionPointerMoveTo = currentAction; //from 32 to 63 we just move the pointer to this number
+            isTerminalOperation = false;
         } else if (currentAction >= (DEFAULT_ACTION_NUMBER * 3)) {
             // we decrease in order to access enum by ordinal
             final int valueModifiedByCurrentDirection = updateWithCurrentDirection(currentAction - DEFAULT_ACTION_NUMBER * 3, bot.getDirection());
             TurnActionType turnActionType = TurnActionType.values()[valueModifiedByCurrentDirection];
             actionPointerMoveTo = handleTurnActionResult(turnActionType, bot, actionResultBundle);
+            isTerminalOperation = turnActionType.getCommandType() == CommandType.TERMINAL;
         } else if (currentAction >= (DEFAULT_ACTION_NUMBER * 2)) {
             final int valueModifiedByCurrentDirection = updateWithCurrentDirection(currentAction - DEFAULT_ACTION_NUMBER * 2, bot.getDirection());
             CheckActionType checkActionType = CheckActionType.values()[valueModifiedByCurrentDirection];
             actionPointerMoveTo = handleCheckActionResult(checkActionType, bot, cellsArray);
+            isTerminalOperation = checkActionType.getCommandType() == CommandType.TERMINAL;
         } else if (currentAction >= DEFAULT_ACTION_NUMBER) {
             final int valueModifiedByCurrentDirection = updateWithCurrentDirection(currentAction - DEFAULT_ACTION_NUMBER, bot.getDirection());
             GrabActionType grabActionType = GrabActionType.values()[valueModifiedByCurrentDirection];
             actionPointerMoveTo = handleGrabActionResult(grabActionType, bot, cellsArray, actionResultBundle);
+            isTerminalOperation = grabActionType.getCommandType() == CommandType.TERMINAL;
         } else {
             final int valueModifiedByCurrentDirection = updateWithCurrentDirection(currentAction, bot.getDirection());
             MoveActionType moveActionType = MoveActionType.values()[valueModifiedByCurrentDirection];
             actionPointerMoveTo = handleMoveActionResult(moveActionType, bot, cellsArray, actionResultBundle);
+            isTerminalOperation = moveActionType.getCommandType() == CommandType.TERMINAL;
         }
         updateBotActionPointer(bot, actionPointerMoveTo);
+        return isTerminalOperation;
     }
 
-    public void handleBotDeathOrConsumeCalorie(SingleBot singleBot, ListIterator<SingleBot> singleBotListIterator, ActionResultBundle actionResultBundle) {
+    public void handleBotDeathOrAction(SingleBot singleBot, ListIterator<SingleBot> singleBotListIterator, ActionResultBundle actionResultBundle) {
         if (singleBot.getHealth() > 1) {
             decreaseBotHealth(singleBot, actionResultBundle);
+            singleBot.setActionsCounter(singleBot.getActionsCounter() + 1);
         } else {
             final int positionX = singleBot.getPositionX();
             final int positionY = singleBot.getPositionY();

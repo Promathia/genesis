@@ -14,13 +14,17 @@ public class SingleBot extends Cell {
     private int currentStep;
     private int health;
     private int direction;
+    private int actionsCounter;
+    private int nonTerminalCommandCounter;
 
     public SingleBot(List<Integer> sourceDNSCommands, int positionX, int positionY) {
         super(positionX, positionY, CellType.BOT);
         this.dnaCommands.addAll(sourceDNSCommands);
-        this.direction = 0; //TODO
+        this.direction = 0;
         this.health = Constants.BOT_INITIAL_HEALTH;
         this.currentStep = ThreadLocalRandom.current().nextInt(Constants.BOT_DNA_COMMANDS);
+        this.nonTerminalCommandCounter = Constants.BOT_NON_TERMINAL_COMMAND_COUNTER_MAX;
+        this.actionsCounter = 0;
     }
 
     public SingleBot(int positionX, int positionY) {
@@ -30,9 +34,11 @@ public class SingleBot extends Cell {
             int command = random.nextInt(Constants.BOT_DNA_COMMANDS);
             dnaCommands.add(command);
         }
-        this.direction = 0; //TODO
+        this.direction = 0;
         this.health = Constants.BOT_INITIAL_HEALTH;
         this.currentStep = 0;
+        this.nonTerminalCommandCounter = Constants.BOT_NON_TERMINAL_COMMAND_COUNTER_MAX;
+        this.actionsCounter = 0;
     }
 
     public List<Integer> getDnaCommands() {
@@ -61,5 +67,21 @@ public class SingleBot extends Cell {
 
     public void setDirection(int direction) {
         this.direction = direction;
+    }
+
+    public int getActionsCounter() {
+        return actionsCounter;
+    }
+
+    public void setActionsCounter(int actionsCounter) {
+        this.actionsCounter = actionsCounter;
+    }
+
+    public int getNonTerminalCommandCounter() {
+        return nonTerminalCommandCounter;
+    }
+
+    public void setNonTerminalCommandCounter(int nonTerminalCommandCounter) {
+        this.nonTerminalCommandCounter = nonTerminalCommandCounter;
     }
 }

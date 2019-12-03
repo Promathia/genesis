@@ -20,7 +20,7 @@ public class UpdateUI implements Runnable {
         while (true) {
             try {
                 worldViewController.handleActionResults(resultsQueue.take());
-                Thread.sleep(17); // 1000 ms / 60 frame rate per second
+                Thread.sleep(2);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
