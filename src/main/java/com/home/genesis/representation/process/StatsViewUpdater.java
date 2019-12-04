@@ -32,8 +32,8 @@ public class StatsViewUpdater implements Runnable {
         Integer botBestActionCounter = actionResultBundle.getBotBestActionCounter();
         Integer generationCounter = actionResultBundle.getGenerationCounter();
         if (botBestActionCounter != null && generationCounter != null) {
-            updateTextCounterView(Styles.BOT_BEST_ACTION_COUNTER.getStyleName(), botBestActionCounter.toString());
-            updateTextCounterView(Styles.GENERATION_COUNTER.getStyleName(), generationCounter.toString());
+            updateTextCounterView(Styles.BOT_BEST_ACTION_COUNTER.getStyleName(), botBestActionCounter);
+            updateTextCounterView(Styles.GENERATION_COUNTER.getStyleName(), generationCounter);
             updateGenerationActionGraphics(Styles.GENERATION_ACTION_CHART.getStyleName(), botBestActionCounter, generationCounter);
         }
     }
@@ -49,16 +49,22 @@ public class StatsViewUpdater implements Runnable {
             System.out.printf("No data series was added to the line chart id=%s\n", id);
             return;
         }
+        ObservableList<XYChart.Data<Number, Number>> series = data.get(0).getData();
+        if (series.size() > Constants.STATS_CHART_LENGTH) {
+            series.remove(0);
+        }
         data.get(0).getData().add(new XYChart.Data(generationCounter,botBestActionCounter));
     }
 
-    private void updateTextCounterView(final String id, final String value) {
+    private void updateTextCounterView(final String id, final Integer value) {
         Text text = (Text) mainPane.lookup(String.format("#%s", id));
         if (text == null) {
             System.out.printf("Text was not found id=%s\n", id);
             return;
         }
-        text.setText(value);
+        if (value > Integer.parseInt(text.getText())) {
+            text.setText(String.valueOf(value));
+        }
     }
 
     private void updateGenomeTableView() {

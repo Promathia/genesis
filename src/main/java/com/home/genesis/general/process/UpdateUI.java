@@ -25,7 +25,6 @@ public class UpdateUI implements Runnable {
         while (true) {
             try {
                 worldViewController.handleActionResults(resultsQueue.take());
-                Thread.sleep(1);
                 semaphore.acquire();
                 semaphore.release();
             } catch (InterruptedException e) {

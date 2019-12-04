@@ -35,6 +35,7 @@ public abstract class Constants {
 
     public static final int STATS_TILE_SIZE = 25;
     public static final int STATS_TILE_TEXT_SIZE = 15;
+    public static final int STATS_CHART_LENGTH = 200;
 
     /*
     * this three commands include pointer transfer in DNA

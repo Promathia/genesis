@@ -13,6 +13,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -78,7 +79,8 @@ public class WorldViewService {
                 genomePane,
                 getText("Generation Counter", 0, generationCounterPositionY, Styles.GENOME_TABLE_LABEL, null),
                 getText("0",
-                        (Constants.STATS_TILE_SIZE * 3 + Constants.STATS_TILE_SIZE / 2),
+                        //(Constants.STATS_TILE_SIZE * 3 + Constants.STATS_TILE_SIZE / 2),
+                        0,
                         generationCounterPositionY + StyleConstants.PADDING_MARGIN * 4,
                         Styles.GENERATION_COUNTER,
                         Styles.GENERATION_COUNTER.getStyleName()),
@@ -87,7 +89,8 @@ public class WorldViewService {
                         generationCounterPositionY + StyleConstants.PADDING_MARGIN * 6.5,
                         Styles.GENOME_TABLE_LABEL, null),
                 getText("0",
-                        (Constants.STATS_TILE_SIZE * 3 + Constants.STATS_TILE_SIZE / 2),
+                        //(Constants.STATS_TILE_SIZE * 3 + Constants.STATS_TILE_SIZE / 2),
+                        0,
                         generationCounterPositionY + StyleConstants.PADDING_MARGIN * 10.5,
                         Styles.BOT_BEST_ACTION_COUNTER,
                         Styles.BOT_BEST_ACTION_COUNTER.getStyleName()),
@@ -100,14 +103,16 @@ public class WorldViewService {
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("Generation");
+        xAxis.setBorder(Border.EMPTY);
         xAxis.setAnimated(false);
         yAxis.setLabel("Max Actions");
         yAxis.setAnimated(false);
+        yAxis.setBorder(Border.EMPTY);
         final LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
         lineChart.setAnimated(false);
         lineChart.setLegendVisible(false);
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        series.setName("Bots Progress");
+        series.setName("Bots Progression");
         lineChart.getData().add(series);
         lineChart.getStyleClass().add(Styles.GENERATION_ACTION_CHART.getStyleName());
         lineChart.setId(Styles.GENERATION_ACTION_CHART.getStyleName());
