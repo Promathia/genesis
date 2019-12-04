@@ -8,7 +8,7 @@ import com.home.genesis.logic.entity.Poison;
 import com.home.genesis.logic.entity.SingleBot;
 import com.home.genesis.logic.services.CellService;
 
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -42,6 +42,12 @@ public class SimulatorContext {
             initialCells = cellService.getInitialCells();
         }
         return initialCells;
+    }
+
+    //TODO generalize, used in two places
+    public List<Integer> getInitialGenome() {
+        Optional<SingleBot> first = this.getBots().stream().max(Comparator.comparingInt(SingleBot::getActionsCounter));
+        return first.isPresent() ? first.get().getDnaCommands() : new ArrayList<>();
     }
 
     public List<SingleBot> getBots() {

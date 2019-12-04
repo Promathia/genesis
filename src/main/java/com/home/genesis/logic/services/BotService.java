@@ -5,12 +5,10 @@ import com.home.genesis.logic.CellType;
 import com.home.genesis.logic.actions.*;
 import com.home.genesis.logic.context.SimulatorContext;
 import com.home.genesis.logic.entity.*;
+import com.home.genesis.logic.entity.results.ActionResultBundle;
 import com.home.genesis.representation.Styles;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Random;
+import java.util.*;
 
 import static com.home.genesis.Constants.DEFAULT_ACTION_NUMBER;
 
@@ -71,8 +69,8 @@ public class BotService {
             Cell cell = cellService.createCell(positionX, positionY, CellType.EMPTY);
             simulatorContext.getCellsArray()[positionX][positionY] = cell;
             singleBotListIterator.remove();
-            actionResultBundle.addActionResult(ActionsResult.CHANGE_TILE, positionX, positionY, Styles.EMPTY.getStyleName());
-            actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, positionX, positionY, "");
+            actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TILE, positionX, positionY, Styles.EMPTY.getStyleName());
+            actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TEXT, positionX, positionY, "");
         }
     }
 
@@ -87,6 +85,15 @@ public class BotService {
         }
     }
 
+    public void updateStatisticsResults(final List<SingleBot> bots, final int generationNumber, final ActionResultBundle actionResultBundle) {
+        Optional<SingleBot> first = bots.stream().max(Comparator.comparingInt(SingleBot::getActionsCounter));
+        first.ifPresent(bot -> {
+            actionResultBundle.addGenomeResult(bot.getDnaCommands());
+            actionResultBundle.setGenerationCounter(generationNumber);
+            actionResultBundle.setBotBestActionCounter(bot.getActionsCounter());
+        });
+    }
+
     private void copyBots(final SingleBot bot, ListIterator<SingleBot> singleBotListIterator, final ActionResultBundle actionResultBundle) {
         // we subtract 1 as we currently have bots, 64max / 8min
         // equal 8, but each bot should produce 7 copies
@@ -99,8 +106,8 @@ public class BotService {
             SingleBot copiedBot = new SingleBot(bot.getDnaCommands(), positionX, positionY);
             cellsArray[positionX][positionY] = copiedBot;
             singleBotListIterator.add(copiedBot);
-            actionResultBundle.addActionResult(ActionsResult.CHANGE_TILE, positionX, positionY, Styles.BOT.getStyleName());
-            actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, positionX, positionY, concatHealthAndDirection(copiedBot));
+            actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TILE, positionX, positionY, Styles.BOT.getStyleName());
+            actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TEXT, positionX, positionY, concatHealthAndDirection(copiedBot));
         }
     }
 
@@ -124,12 +131,12 @@ public class BotService {
 
     private void decreaseBotHealth(final SingleBot bot, final ActionResultBundle actionResultBundle) {
         bot.setHealth(bot.getHealth() - Constants.BOT_CONSUMES_CALORIES);
-        actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), concatHealthAndDirection(bot));
+        actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), concatHealthAndDirection(bot));
     }
 
     private int handleTurnActionResult(final TurnActionType turnActionType, final SingleBot bot, final ActionResultBundle actionResultBundle) {
         bot.setDirection(turnActionType.getTurnDirection());
-        actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), concatHealthAndDirection(bot));
+        actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), concatHealthAndDirection(bot));
         return 1;
     }
 
@@ -193,10 +200,10 @@ public class BotService {
         poisonService.removePoison(poisonCell);
         Food food = (Food) cellService.createCell(resultX, resultY, CellType.FOOD);
         foodService.addFood(food);
-        actionResultBundle.addActionResult(ActionsResult.CHANGE_TILE, resultX, resultY, Styles.FOOD.getStyleName());
+        actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TILE, resultX, resultY, Styles.FOOD.getStyleName());
         if (simulatorContext.getPoison().size() < Constants.POISON_NUMBER) {
             Cell newPoisonCell = poisonService.generatePoison();
-            actionResultBundle.addActionResult(ActionsResult.CHANGE_TILE, newPoisonCell.getPositionX(), newPoisonCell.getPositionY(), Styles.POISON.getStyleName());
+            actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TILE, newPoisonCell.getPositionX(), newPoisonCell.getPositionY(), Styles.POISON.getStyleName());
         }
     }
 
@@ -238,12 +245,12 @@ public class BotService {
         final Poison poisonCell = (Poison) cellsArray[resultX][resultY];
         bot.setHealth(-1);
         poisonService.removePoison(poisonCell);
-        actionResultBundle.addActionResult(ActionsResult.REMOVE, bot.getPositionX(), bot.getPositionY(), null);
-        actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), "");
-        actionResultBundle.addActionResult(ActionsResult.REMOVE, resultX, resultY, null);
+        actionResultBundle.addBotActionResult(ActionsResult.REMOVE, bot.getPositionX(), bot.getPositionY(), null);
+        actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), "");
+        actionResultBundle.addBotActionResult(ActionsResult.REMOVE, resultX, resultY, null);
         if (simulatorContext.getPoison().size() < Constants.POISON_NUMBER) {
             Poison newPoisonCell = (Poison) poisonService.generatePoison();
-            actionResultBundle.addActionResult(ActionsResult.CHANGE_TILE, newPoisonCell.getPositionX(),
+            actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TILE, newPoisonCell.getPositionX(),
                     newPoisonCell.getPositionY(), Styles.POISON.getStyleName());
         }
     }
@@ -252,27 +259,27 @@ public class BotService {
         final Food foodCell = (Food) cellsArray[resultX][resultY];
         foodService.removeFood(foodCell);
         this.increaseBotHealth(bot);
-        actionResultBundle.addActionResult(ActionsResult.CHANGE_TILE, resultX, resultY, Styles.EMPTY.getStyleName());
+        actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TILE, resultX, resultY, Styles.EMPTY.getStyleName());
         //we dont push health event as it is decreased generally
         if (simulatorContext.getFood().size() < Constants.FOOD_NUMBER) {
             Food newFoodCell = (Food) foodService.generateFood();
-            actionResultBundle.addActionResult(ActionsResult.CHANGE_TILE, newFoodCell.getPositionX(),
+            actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TILE, newFoodCell.getPositionX(),
                     newFoodCell.getPositionY(), Styles.FOOD.getStyleName());
         }
     }
 
     private void handleBotEatsAndMove(int resultX, int resultY, SingleBot bot, Cell[][] cellsArray, ActionResultBundle actionResultBundle) {
         final Food foodCell = (Food) cellsArray[resultX][resultY];
-        actionResultBundle.addActionResult(ActionsResult.REMOVE, bot.getPositionX(), bot.getPositionY(), null);
-        actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), "");
+        actionResultBundle.addBotActionResult(ActionsResult.REMOVE, bot.getPositionX(), bot.getPositionY(), null);
+        actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), "");
         foodService.removeFood(foodCell);
         changeBotPosition(bot, resultX, resultY);
         increaseBotHealth(bot);
-        actionResultBundle.addActionResult(ActionsResult.CHANGE_TILE, resultX, resultY, Styles.BOT.getStyleName());
+        actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TILE, resultX, resultY, Styles.BOT.getStyleName());
         //TODO not required as health is decreased generally
         if (simulatorContext.getFood().size() < Constants.FOOD_NUMBER) {
             Food newFoodCell = (Food) foodService.generateFood();
-            actionResultBundle.addActionResult(ActionsResult.CHANGE_TILE, newFoodCell.getPositionX(),
+            actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TILE, newFoodCell.getPositionX(),
                     newFoodCell.getPositionY(), Styles.FOOD.getStyleName());
         }
     }
@@ -284,10 +291,10 @@ public class BotService {
     }
 
     private void handleMoveBot(int resultX, int resultY, SingleBot bot, ActionResultBundle actionResultBundle) {
-        actionResultBundle.addActionResult(ActionsResult.REMOVE, bot.getPositionX(), bot.getPositionY(), null);
-        actionResultBundle.addActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), "");
+        actionResultBundle.addBotActionResult(ActionsResult.REMOVE, bot.getPositionX(), bot.getPositionY(), null);
+        actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TEXT, bot.getPositionX(), bot.getPositionY(), "");
         changeBotPosition(bot, resultX, resultY);
-        actionResultBundle.addActionResult(ActionsResult.CHANGE_TILE, resultX, resultY, Styles.BOT.getStyleName());
+        actionResultBundle.addBotActionResult(ActionsResult.CHANGE_TILE, resultX, resultY, Styles.BOT.getStyleName());
     }
 
     private void changeBotPosition(SingleBot bot, int resultX, int resultY) {

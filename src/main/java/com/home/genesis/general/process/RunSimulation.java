@@ -4,7 +4,7 @@ import com.home.genesis.Constants;
 import com.home.genesis.general.services.LifeSimulatorService;
 import com.home.genesis.general.services.StatisticsService;
 import com.home.genesis.logic.context.SimulatorContext;
-import com.home.genesis.logic.entity.ActionResultBundle;
+import com.home.genesis.logic.entity.results.ActionResultBundle;
 import com.home.genesis.logic.entity.Cell;
 import com.home.genesis.logic.entity.SingleBot;
 import com.home.genesis.logic.services.BotService;
@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Semaphore;
 
 public class RunSimulation implements Runnable {
 
@@ -21,13 +22,17 @@ public class RunSimulation implements Runnable {
     private BotService botService;
     private StatisticsService statisticsService;
     private BlockingQueue<ActionResultBundle> resultsQueue;
+    private Semaphore semaphore;
 
-    public RunSimulation(BlockingQueue<ActionResultBundle> resultsQueue, LifeSimulatorService lifeSimulatorService) {
+    public RunSimulation(BlockingQueue<ActionResultBundle> resultsQueue,
+                         Semaphore semaphore,
+                         LifeSimulatorService lifeSimulatorService) {
         this.simulatorContext = SimulatorContext.getInstance();
         this.botService = new BotService();
         this.resultsQueue = resultsQueue;
         this.lifeSimulatorService = lifeSimulatorService;
         this.statisticsService = new StatisticsService();
+        this.semaphore = semaphore;
     }
 
     @Override
@@ -36,6 +41,8 @@ public class RunSimulation implements Runnable {
             try {
                 handleBotActions();
                 Thread.sleep(lifeSimulatorService.getPauseTimeBetweenActions());
+                semaphore.acquire();
+                semaphore.release();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -51,6 +58,7 @@ public class RunSimulation implements Runnable {
             if (bots.size() <= Constants.BOT_MIN_NUMBER) {
                 int generationNumber = simulatorContext.getGenerationCounter().incrementAndGet();
                 statisticsService.writeDataToFile(bots, generationNumber);
+                botService.updateStatisticsResults(bots, generationNumber, actionResultBundle);
                 botService.handleNewBotsCreation(singleBotListIterator, actionResultBundle);
                 resultsQueue.put(actionResultBundle);
                 break;

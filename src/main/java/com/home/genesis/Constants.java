@@ -2,18 +2,20 @@ package com.home.genesis;
 
 public abstract class Constants {
 
-    public static final int SIZE_X = 1300;
-    public static final int SIZE_Y = 560;
-    public static final int TILE_SIZE = 20;
-    public static final int CELL_NUMBER_X = 50;
-    public static final int CELL_NUMBER_Y = 25;
+    public static final int SIZE_X = 1280;
+    public static final int SIZE_Y = 580;
+    public static final int TILE_SIZE = 16;
+    public static final int BOT_TILE_TEXT_SIZE = 8;
+    public static final int CELL_NUMBER_X = 65;
+    public static final int CELL_NUMBER_Y = 33;
 
-    public static final int OBSTACLE_NUMBER_ON_MAP = 4;
-    public static final int OBSTACLE_SIZE = 5;
+    public static final int OBSTACLE_NUMBER_ON_MAP = 35;
+    public static final int OBSTACLE_SIZE = 1;
 
-    public static final int BOT_INITIAL_HEALTH = 10;
+    public static final int BOT_INITIAL_HEALTH = 15;
     public static final int BOT_MAX_HEALTH = 90;
     public static final int BOT_DNA_COMMANDS = 64;
+    public static final int BOT_DNA_DIMENSION = (int) Math.sqrt(BOT_DNA_COMMANDS);
     public static final int BOT_MIN_NUMBER = 8;
     public static final int BOT_MAX_NUMBER = 64;
     public static final int BOT_CONSUMES_CALORIES = 1;
@@ -22,14 +24,17 @@ public abstract class Constants {
     public static final int MAX_MUTATIONS_PER_GENERATION = 3;
 
     public static final int FOOD_CALORIES = 10;
-    public static final int FOOD_NUMBER = 30;
+    public static final int FOOD_NUMBER = 50;
 
-    public static final int POISON_NUMBER = 30;
+    public static final int POISON_NUMBER = 40;
 
     public static final int DEFAULT_ACTION_NUMBER = 8;
 
     public static final int UPDATE_QUEUE_CAPACITY = 100;
     public static final int DEFAULT_PAUSE_BETWEEN_BOT_ACTIONS = 200;
+
+    public static final int STATS_TILE_SIZE = 25;
+    public static final int STATS_TILE_TEXT_SIZE = 15;
 
     /*
     * this three commands include pointer transfer in DNA

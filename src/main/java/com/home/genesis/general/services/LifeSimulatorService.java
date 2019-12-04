@@ -5,7 +5,7 @@ import com.home.genesis.general.LifeSimulator;
 import com.home.genesis.general.process.RunSimulation;
 import com.home.genesis.general.process.UpdateUI;
 import com.home.genesis.logic.context.SimulatorContext;
-import com.home.genesis.logic.entity.ActionResultBundle;
+import com.home.genesis.logic.entity.results.ActionResultBundle;
 import com.home.genesis.representation.controllers.WorldViewController;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Semaphore;
 
 public class LifeSimulatorService {
 
@@ -20,9 +21,14 @@ public class LifeSimulatorService {
     private int pauseTimeBetweenActions = Constants.DEFAULT_PAUSE_BETWEEN_BOT_ACTIONS;
 
     private final BlockingQueue<ActionResultBundle> resultsQueue = new LinkedBlockingQueue<>(Constants.UPDATE_QUEUE_CAPACITY);
+    private final Semaphore semaphore = new Semaphore(2, true);
 
     public LifeSimulatorService() {
-        this.worldViewController = new WorldViewController(SimulatorContext.getInstance().getInitialCells(), pauseTimeBetweenActions);
+        this.worldViewController = new WorldViewController(
+                SimulatorContext.getInstance().getInitialCells(),
+                SimulatorContext.getInstance().getInitialGenome(),
+                semaphore,
+                pauseTimeBetweenActions);
     }
 
     public void drawScene(final Stage stage, final String cssPath) {
@@ -35,10 +41,10 @@ public class LifeSimulatorService {
     }
 
     public void startLifeSimulationProcess() {
-        final Thread logicThread = new Thread(new RunSimulation(resultsQueue, this));
+        final Thread logicThread = new Thread(new RunSimulation(resultsQueue, semaphore, this));
         logicThread.setDaemon(true);
         logicThread.start();
-        final Thread uiThread = new Thread(new UpdateUI(resultsQueue, worldViewController));
+        final Thread uiThread = new Thread(new UpdateUI(resultsQueue, semaphore, worldViewController));
         uiThread.setDaemon(true);
         uiThread.start();
     }
