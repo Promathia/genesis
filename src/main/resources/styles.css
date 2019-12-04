@@ -1,0 +1,177 @@
+.root-pane {
+    -fx-background-color: #1a212e;
+    -fx-padding: 30;
+}
+
+
+
+.speed-counter-text {
+    -fx-font: 20px Tahoma;
+    -fx-fill: #0086C8;
+    -fx-stroke: #002438;
+    -fx-stroke-width: 0.5;
+}
+
+.button-play {
+    -fx-background-image: url(play.png);
+    -fx-background-size: 21px 21px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: rgba(0,0,0,0);
+}
+
+.button-pause {
+    -fx-background-image: url(pause.png);
+    -fx-background-size: 21px 21px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: rgba(0,0,0,0);
+}
+
+.button-left {
+    -fx-background-image: url(left_arrow.png);
+    -fx-background-size: 20px 20px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: rgba(0,0,0,0);
+}
+
+.button-right {
+    -fx-background-image: url(right_arrow.png);
+    -fx-background-size: 20px 20px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: rgba(0,0,0,0);
+}
+
+.genome-table-label {
+    -fx-font: 15px Tahoma;
+    -fx-font-weight: bold;
+    -fx-fill: #007000;
+}
+
+.generation-counter {
+    -fx-font: 35px Tahoma;
+    -fx-font-weight: bold;
+    -fx-fill: #009adb;
+}
+
+.bot-best-action-counter {
+    -fx-font: 35px Tahoma;
+    -fx-font-weight: bold;
+    -fx-fill: #009adb;
+}
+
+.genome-tile {
+    -fx-fill: #1a212e;
+    -fx-stroke: #00527d;
+    -fx-stroke-width: 1;
+    -fx-stroke-type: inside;
+}
+
+.genome-text {
+    -fx-font: 13px Tahoma;
+    -fx-font-weight: bold;
+    -fx-fill: #009adb;
+}
+
+
+.generation-action-chart .chart {
+    -fx-background-color: #1a212e;
+}
+
+.generation-action-chart .chart-plot-background {
+    -fx-background-color:transparent;
+}
+
+.generation-action-chart .chart-vertical-grid-lines {
+    -fx-stroke: #00527d;
+}
+
+.generation-action-chart .chart-horizontal-grid-lines {
+    -fx-stroke: #00527d;
+}
+
+.generation-action-chart .chart-vertical-zero-lines {
+    -fx-fill: #1a212e;
+    -fx-stroke: #00527d;
+    -fx-stroke-width: 3;
+    -fx-stroke-type: inside;
+}
+
+.generation-action-chart .chart-zero-lines {
+    -fx-fill: #1a212e;
+    -fx-stroke: #00527d;
+    -fx-stroke-width: 3;
+    -fx-stroke-type: inside;
+}
+
+.generation-action-chart .chart-series {
+    -fx-background-color: rgba(0,0,0,0);
+}
+
+.generation-action-chart .chart-content {
+    -fx-background-color: rgba(0,0,0,0);
+    -fx-padding: 0px 0px -10px -10px;
+}
+
+.generation-action-chart .axis {
+    -fx-tick-label-font: 8px Tahoma;
+    -fx-tick-label-fill: #009adb;
+    -fx-stroke-width: 22;
+    -fx-tick-length: 0;
+    -fx-minor-tick-length: 0;
+}
+
+.generation-action-chart .axis-label {
+    -fx-text-fill: #009adb;
+    -fx-padding: 0px 0px -1px -1px;
+}
+
+.generation-action-chart .chart-series-line {
+    -fx-stroke: #009adb;
+    -fx-stroke-width: 0.8;
+}
+
+.generation-action-chart .chart-line-symbol {
+    -fx-background-color: #009adb;
+    -fx-stroke-width: 0.1;
+}
+
+
+
+
+.empty-tile {
+    -fx-fill: #1a212e;
+    -fx-stroke: #003e00;
+    -fx-stroke-width: 1;
+    -fx-stroke-type: inside;
+}
+
+.poison-tile {
+    -fx-fill: #b12100;
+    -fx-stroke: #003e00;
+    -fx-stroke-width: 1;
+    -fx-stroke-type: inside;
+}
+
+.bot-tile {
+    -fx-fill: #0086c8;
+    -fx-stroke: #003e00;
+    -fx-stroke-width: 1;
+    -fx-stroke-type: inside;
+}
+
+.obstacle-tile {
+    -fx-fill: #505552;
+    -fx-stroke: #003e00;
+    -fx-stroke-width: 1;
+    -fx-stroke-type: inside;
+}
+
+.food-tile {
+    -fx-fill: #03b100;
+    -fx-stroke: #003e00;
+    -fx-stroke-width: 1;
+    -fx-stroke-type: inside;
+}
