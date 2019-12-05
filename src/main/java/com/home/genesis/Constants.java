@@ -24,7 +24,7 @@ public abstract class Constants {
     public static final int MAX_MUTATIONS_PER_GENERATION = 3;
 
     public static final int FOOD_CALORIES = 10;
-    public static final int FOOD_NUMBER = 50;
+    public static final int FOOD_NUMBER = 80;
 
     public static final int POISON_NUMBER = 40;
 

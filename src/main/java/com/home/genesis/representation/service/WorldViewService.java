@@ -105,6 +105,7 @@ public class WorldViewService {
         xAxis.setLabel("Generation");
         xAxis.setBorder(Border.EMPTY);
         xAxis.setAnimated(false);
+        xAxis.setForceZeroInRange(false);
         yAxis.setLabel("Max Actions");
         yAxis.setAnimated(false);
         yAxis.setBorder(Border.EMPTY);
@@ -148,9 +149,9 @@ public class WorldViewService {
         speedCounter.setTranslateY(19);
         speedCounter.getStyleClass().add(Styles.SPEED_COUNTER_TEXT.getStyleName());
         buttonPane.getChildren().addAll(
-                createSpeedButton(Styles.BUTTON_LEFT, speedCounter, 20, 0, 0),
+                createSpeedButton(Styles.BUTTON_LEFT, speedCounter, -20, 0, 0),
                 speedCounter,
-                createSpeedButton(Styles.BUTTON_RIGHT, speedCounter, -20, 60, 0),
+                createSpeedButton(Styles.BUTTON_RIGHT, speedCounter, 20, 60, 0),
                 createPlayPauseButton(Styles.PLAY_BUTTON, Styles.PAUSE_BUTTON, 90, 0));
         return buttonPane;
     }
@@ -198,8 +199,8 @@ public class WorldViewService {
         button.setTranslateX(translateX);
         button.setTranslateY(translateY);
         button.setOnAction(e -> {
-            if (currentActionPauseValue > 20) {
-                currentActionPauseValue = currentActionPauseValue - speedIncrement;
+            if (currentActionPauseValue > 20 || speedIncrement > 0) {
+                currentActionPauseValue = currentActionPauseValue + speedIncrement;
                 counter.setText(String.valueOf(currentActionPauseValue));
             }
         });
