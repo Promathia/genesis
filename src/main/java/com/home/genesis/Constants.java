@@ -24,7 +24,7 @@ public abstract class Constants {
     public static final int MAX_MUTATIONS_PER_GENERATION = 3;
 
     public static final int FOOD_CALORIES = 10;
-    public static final int FOOD_NUMBER = 50;
+    public static final int FOOD_NUMBER = 80;
 
     public static final int POISON_NUMBER = 40;
 
@@ -35,6 +35,7 @@ public abstract class Constants {
 
     public static final int STATS_TILE_SIZE = 25;
     public static final int STATS_TILE_TEXT_SIZE = 15;
+    public static final int STATS_CHART_LENGTH = 200;
 
     /*
     * this three commands include pointer transfer in DNA

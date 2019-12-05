@@ -3,8 +3,6 @@
     -fx-padding: 30;
 }
 
-
-
 .speed-counter-text {
     -fx-font: 20px Tahoma;
     -fx-fill: #0086C8;
@@ -18,6 +16,11 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
     -fx-background-color: rgba(0,0,0,0);
+    -fx-cursor: hand;
+}
+
+.button-play:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 154, 219, 0.8), 14, 0, 0, 0);
 }
 
 .button-pause {
@@ -26,6 +29,11 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
     -fx-background-color: rgba(0,0,0,0);
+    -fx-cursor: hand;
+}
+
+.button-pause:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 154, 219, 0.8), 14, 0, 0, 0);
 }
 
 .button-left {
@@ -34,6 +42,11 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
     -fx-background-color: rgba(0,0,0,0);
+    -fx-cursor: hand;
+}
+
+.button-left:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 154, 219, 0.8), 14, 0, 0, 0);
 }
 
 .button-right {
@@ -42,6 +55,11 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
     -fx-background-color: rgba(0,0,0,0);
+    -fx-cursor: hand;
+}
+
+.button-right:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 154, 219, 0.8), 14, 0, 0, 0);
 }
 
 .genome-table-label {
@@ -92,33 +110,26 @@
     -fx-stroke: #00527d;
 }
 
-.generation-action-chart .chart-vertical-zero-lines {
-    -fx-fill: #1a212e;
-    -fx-stroke: #00527d;
-    -fx-stroke-width: 3;
-    -fx-stroke-type: inside;
+.generation-action-chart .chart-vertical-zero-line {
+    -fx-stroke: #0078b1;
 }
 
-.generation-action-chart .chart-zero-lines {
-    -fx-fill: #1a212e;
-    -fx-stroke: #00527d;
-    -fx-stroke-width: 3;
-    -fx-stroke-type: inside;
+.generation-action-chart .chart-horizontal-zero-line {
+    -fx-stroke: #0078b1;
 }
 
 .generation-action-chart .chart-series {
-    -fx-background-color: rgba(0,0,0,0);
+    -fx-background-color: transparent;
 }
 
 .generation-action-chart .chart-content {
-    -fx-background-color: rgba(0,0,0,0);
+    -fx-background-color: transparent;
     -fx-padding: 0px 0px -10px -10px;
 }
 
 .generation-action-chart .axis {
     -fx-tick-label-font: 8px Tahoma;
     -fx-tick-label-fill: #009adb;
-    -fx-stroke-width: 22;
     -fx-tick-length: 0;
     -fx-minor-tick-length: 0;
 }
@@ -135,10 +146,8 @@
 
 .generation-action-chart .chart-line-symbol {
     -fx-background-color: #009adb;
-    -fx-stroke-width: 0.1;
+    -fx-padding: 1.5;
 }
-
-
 
 
 .empty-tile {

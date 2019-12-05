@@ -13,6 +13,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -78,7 +79,8 @@ public class WorldViewService {
                 genomePane,
                 getText("Generation Counter", 0, generationCounterPositionY, Styles.GENOME_TABLE_LABEL, null),
                 getText("0",
-                        (Constants.STATS_TILE_SIZE * 3 + Constants.STATS_TILE_SIZE / 2),
+                        //(Constants.STATS_TILE_SIZE * 3 + Constants.STATS_TILE_SIZE / 2),
+                        0,
                         generationCounterPositionY + StyleConstants.PADDING_MARGIN * 4,
                         Styles.GENERATION_COUNTER,
                         Styles.GENERATION_COUNTER.getStyleName()),
@@ -87,7 +89,8 @@ public class WorldViewService {
                         generationCounterPositionY + StyleConstants.PADDING_MARGIN * 6.5,
                         Styles.GENOME_TABLE_LABEL, null),
                 getText("0",
-                        (Constants.STATS_TILE_SIZE * 3 + Constants.STATS_TILE_SIZE / 2),
+                        //(Constants.STATS_TILE_SIZE * 3 + Constants.STATS_TILE_SIZE / 2),
+                        0,
                         generationCounterPositionY + StyleConstants.PADDING_MARGIN * 10.5,
                         Styles.BOT_BEST_ACTION_COUNTER,
                         Styles.BOT_BEST_ACTION_COUNTER.getStyleName()),
@@ -100,14 +103,17 @@ public class WorldViewService {
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("Generation");
+        xAxis.setBorder(Border.EMPTY);
         xAxis.setAnimated(false);
+        xAxis.setForceZeroInRange(false);
         yAxis.setLabel("Max Actions");
         yAxis.setAnimated(false);
+        yAxis.setBorder(Border.EMPTY);
         final LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
         lineChart.setAnimated(false);
         lineChart.setLegendVisible(false);
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        series.setName("Bots Progress");
+        series.setName("Bots Progression");
         lineChart.getData().add(series);
         lineChart.getStyleClass().add(Styles.GENERATION_ACTION_CHART.getStyleName());
         lineChart.setId(Styles.GENERATION_ACTION_CHART.getStyleName());
@@ -143,9 +149,9 @@ public class WorldViewService {
         speedCounter.setTranslateY(19);
         speedCounter.getStyleClass().add(Styles.SPEED_COUNTER_TEXT.getStyleName());
         buttonPane.getChildren().addAll(
-                createSpeedButton(Styles.BUTTON_LEFT, speedCounter, 20, 0, 0),
+                createSpeedButton(Styles.BUTTON_LEFT, speedCounter, -20, 0, 0),
                 speedCounter,
-                createSpeedButton(Styles.BUTTON_RIGHT, speedCounter, -20, 60, 0),
+                createSpeedButton(Styles.BUTTON_RIGHT, speedCounter, 20, 60, 0),
                 createPlayPauseButton(Styles.PLAY_BUTTON, Styles.PAUSE_BUTTON, 90, 0));
         return buttonPane;
     }
@@ -193,8 +199,8 @@ public class WorldViewService {
         button.setTranslateX(translateX);
         button.setTranslateY(translateY);
         button.setOnAction(e -> {
-            if (currentActionPauseValue > 20) {
-                currentActionPauseValue = currentActionPauseValue - speedIncrement;
+            if (currentActionPauseValue > 20 || speedIncrement > 0) {
+                currentActionPauseValue = currentActionPauseValue + speedIncrement;
                 counter.setText(String.valueOf(currentActionPauseValue));
             }
         });
