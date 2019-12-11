@@ -28,7 +28,7 @@ public class FoodService {
     }
 
     public Cell generateFood() {
-        Food foodCell = (Food) cellService.generateCell(CellType.FOOD);
+        Food foodCell = (Food) cellService.generateRandomCellByType(CellType.FOOD);
         Cell[][] cellsArray = SimulatorContext.getInstance().getCellsArray();
         cellsArray[foodCell.getPositionX()][foodCell.getPositionY()] = foodCell;
         SimulatorContext.getInstance().incrementAndGetFoodCounter();

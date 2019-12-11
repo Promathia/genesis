@@ -9,7 +9,7 @@ public abstract class Constants {
     public static final int CELL_NUMBER_X = 65;
     public static final int CELL_NUMBER_Y = 33;
 
-    public static final int OBSTACLE_NUMBER_ON_MAP = 35;
+    public static final int OBSTACLE_NUMBER_ON_MAP = 30;
     public static final int OBSTACLE_SIZE = 1;
 
     public static final int BOT_INITIAL_HEALTH = 30;
@@ -21,7 +21,7 @@ public abstract class Constants {
     public static final int BOT_CONSUMES_CALORIES = 1;
     public static final int BOT_NON_TERMINAL_COMMAND_COUNTER_MAX = 10;
 
-    public static final int MAX_MUTATIONS_PER_GENERATION = 3;
+    public static final int MAX_MUTATIONS_PER_GENERATION = 10;
 
     public static final int FOOD_CALORIES = 10;
     public static final int FOOD_NUMBER = 80;
@@ -31,7 +31,7 @@ public abstract class Constants {
     public static final int DEFAULT_ACTION_NUMBER = 8;
 
     public static final int UPDATE_QUEUE_CAPACITY = 100;
-    public static final int DEFAULT_PAUSE_BETWEEN_BOT_ACTIONS = 200;
+    public static final int DEFAULT_PAUSE_BETWEEN_BOT_ACTIONS = 100;
 
     public static final int STATS_TILE_SIZE = 25;
     public static final int STATS_TILE_TEXT_SIZE = 15;

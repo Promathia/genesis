@@ -22,7 +22,7 @@ public class PoisonService {
     }
 
     public Cell generatePoison() {
-        Poison poisonCell = (Poison) cellService.generateCell(CellType.POISON);
+        Poison poisonCell = (Poison) cellService.generateRandomCellByType(CellType.POISON);
         Cell[][] cellsArray = SimulatorContext.getInstance().getCellsArray();
         cellsArray[poisonCell.getPositionX()][poisonCell.getPositionY()] = poisonCell;
         SimulatorContext.getInstance().incrementAndGetPoisonCounter();

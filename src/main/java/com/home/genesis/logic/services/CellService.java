@@ -24,7 +24,7 @@ public class CellService {
         return cells;
     }
 
-    public Cell generateCell(final CellType cellType) {
+    public Cell generateRandomCellByType(final CellType cellType) {
         final Random random = new Random();
         Cell[][] cellsArray = SimulatorContext.getInstance().getCellsArray();
         Cell newCell = null;
