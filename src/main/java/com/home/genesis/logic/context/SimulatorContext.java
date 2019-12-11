@@ -15,16 +15,21 @@ import java.util.stream.Collectors;
 public class SimulatorContext {
 
     private static SimulatorContext instance;
-    private CellService cellService;
-    private List<Cell> initialCells;
+    private final CellService cellService;
     private List<SingleBot> bots;
-    private List<Food> food;
-    private List<Poison> poison;
-    private Cell[][] cellsArray;
-    private AtomicInteger generationCounter;
+    private final AtomicInteger foodCounter;
+    private final AtomicInteger poisonCounter;
+    private final Cell[][] cellsArray = new Cell[Constants.CELL_NUMBER_X][Constants.CELL_NUMBER_Y];
+    private final AtomicInteger generationCounter;
 
     private SimulatorContext() {
-        generationCounter = new AtomicInteger(0);
+        this.generationCounter = new AtomicInteger(0);
+        this.foodCounter = new AtomicInteger(0);
+        this.poisonCounter = new AtomicInteger(0);
+        this.cellService = new CellService();
+        this.initializeCellsArray();
+        this.initializeFoodCounter();
+        this.initializePoisonCounter();
     }
 
     public static synchronized SimulatorContext getInstance() {
@@ -32,16 +37,6 @@ public class SimulatorContext {
             instance = new SimulatorContext();
         }
         return instance;
-    }
-
-    public List<Cell> getInitialCells() {
-        if (initialCells == null || initialCells.isEmpty()) {
-            if (cellService == null) {
-                cellService = new CellService(); //TODO !!!!!!!!!!!!
-            }
-            initialCells = cellService.getInitialCells();
-        }
-        return initialCells;
     }
 
     //TODO generalize, used in two places
@@ -52,8 +47,8 @@ public class SimulatorContext {
 
     public List<SingleBot> getBots() {
         if (this.bots == null) {
-            List<Cell> cells = this.getInitialCells();
-            this.bots = cells.stream()
+            this.bots = Arrays.stream(cellsArray)
+                    .flatMap(Arrays::stream)
                     .filter(cell -> cell.getCellType().equals(CellType.BOT))
                     .map(cell -> (SingleBot) cell)
                     .collect(Collectors.toList());
@@ -61,40 +56,59 @@ public class SimulatorContext {
         return this.bots;
     }
 
-    public List<Food> getFood() {
-        if (this.food == null) {
-            List<Cell> cells = this.getInitialCells();
-            this.food = cells.stream()
-                    .filter(cell -> cell.getCellType().equals(CellType.FOOD))
-                    .map(cell -> (Food) cell)
-                    .collect(Collectors.toList());
-        }
-        return this.food;
-    }
-
-    public List<Poison> getPoison() {
-        if (this.poison == null) {
-            List<Cell> cells = this.getInitialCells();
-            this.poison = cells.stream()
-                    .filter(cell -> cell.getCellType().equals(CellType.POISON))
-                    .map(cell -> (Poison) cell)
-                    .collect(Collectors.toList());
-        }
-        return this.poison;
-    }
-
     public Cell[][] getCellsArray() {
-        if (this.cellsArray == null) {
-            this.cellsArray = new Cell[Constants.CELL_NUMBER_X][Constants.CELL_NUMBER_Y];
-            List<Cell> cells = this.getInitialCells();
-            cells.forEach(cell -> {
-                cellsArray[cell.getPositionX()][cell.getPositionY()] = cell;
-            });
-        }
-        return this.cellsArray;
+        return cellsArray;
     }
 
-    public AtomicInteger getGenerationCounter() {
-        return generationCounter;
+    public int incrementAndGetGenerationCounter() {
+        return generationCounter.incrementAndGet();
     }
+
+    public int getPoisonNumber() {
+        return poisonCounter.get();
+    }
+
+    public int getFoodNumber() {
+        return foodCounter.get();
+    }
+
+    public int incrementAndGetPoisonCounter() {
+        return poisonCounter.incrementAndGet();
+    }
+
+    public int incrementAndGetFoodCounter() {
+        return foodCounter.incrementAndGet();
+    }
+
+    public int decrementPoisonCounter() {
+        return poisonCounter.decrementAndGet();
+    }
+
+    public int decrementFoodCounter() {
+        return foodCounter.decrementAndGet();
+    }
+
+    private void initializeCellsArray() {
+        final Set<Cell> initialCells = cellService.getInitialCells();
+        initialCells.forEach(cell -> {
+            cellsArray[cell.getPositionX()][cell.getPositionY()] = cell;
+        });
+    }
+
+    private void initializePoisonCounter() {
+        long count = Arrays.stream(cellsArray)
+                .flatMap(Arrays::stream)
+                .filter(cell -> cell.getCellType().equals(CellType.POISON))
+                .count();
+        poisonCounter.set((int) count);
+    }
+
+    private void initializeFoodCounter() {
+        long count = Arrays.stream(cellsArray)
+                .flatMap(Arrays::stream)
+                .filter(cell -> cell.getCellType().equals(CellType.FOOD))
+                .count();
+        foodCounter.set((int) count);
+    }
+
 }

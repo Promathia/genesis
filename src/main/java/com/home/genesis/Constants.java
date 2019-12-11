@@ -12,7 +12,7 @@ public abstract class Constants {
     public static final int OBSTACLE_NUMBER_ON_MAP = 35;
     public static final int OBSTACLE_SIZE = 1;
 
-    public static final int BOT_INITIAL_HEALTH = 15;
+    public static final int BOT_INITIAL_HEALTH = 30;
     public static final int BOT_MAX_HEALTH = 90;
     public static final int BOT_DNA_COMMANDS = 64;
     public static final int BOT_DNA_DIMENSION = (int) Math.sqrt(BOT_DNA_COMMANDS);

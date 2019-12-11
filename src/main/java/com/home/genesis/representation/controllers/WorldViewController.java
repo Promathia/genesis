@@ -24,7 +24,7 @@ public class WorldViewController {
 
     private Pane mainPane;
 
-    public WorldViewController(final List<Cell> initialCells,
+    public WorldViewController(final Cell[][] initialCells,
                                final List<Integer> genomeData,
                                final Semaphore semaphore,
                                final int currentActionPauseValue) {

@@ -9,13 +9,10 @@ import java.util.*;
 
 public class CellService {
 
-    private SimulatorContext simulatorContext;
-
     public CellService() {
-        this.simulatorContext = SimulatorContext.getInstance();
     }
 
-    public List<Cell> getInitialCells() {
+    public Set<Cell> getInitialCells() {
         final int totalCellNumber = Constants.CELL_NUMBER_X * Constants.CELL_NUMBER_Y;
         final Set<Cell> cells = new HashSet<>(totalCellNumber);
         createFrameOfObstacles(cells);
@@ -24,12 +21,12 @@ public class CellService {
         populateCellsCollection(cells, CellType.POISON, Constants.POISON_NUMBER);
         populateCellsCollection(cells, CellType.BOT, Constants.BOT_MAX_NUMBER);
         addEmptyCells(cells);
-        return new ArrayList<>(cells);
+        return cells;
     }
 
     public Cell generateCell(final CellType cellType) {
         final Random random = new Random();
-        Cell[][] cellsArray = simulatorContext.getCellsArray();
+        Cell[][] cellsArray = SimulatorContext.getInstance().getCellsArray();
         Cell newCell = null;
         int initialX;
         int initialY;
@@ -48,7 +45,7 @@ public class CellService {
 
     public Cell getRandomEmptyCell() {
         final Random random = new Random(System.currentTimeMillis());
-        Cell[][] cellsArray = simulatorContext.getCellsArray();
+        Cell[][] cellsArray = SimulatorContext.getInstance().getCellsArray();
         Cell cell;
         boolean cellFound = false;
         do {

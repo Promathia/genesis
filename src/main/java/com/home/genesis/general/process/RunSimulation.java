@@ -17,17 +17,15 @@ import java.util.concurrent.Semaphore;
 
 public class RunSimulation implements Runnable {
 
-    private SimulatorContext simulatorContext;
-    private LifeSimulatorService lifeSimulatorService;
-    private BotService botService;
-    private StatisticsService statisticsService;
-    private BlockingQueue<ActionResultBundle> resultsQueue;
-    private Semaphore semaphore;
+    private final LifeSimulatorService lifeSimulatorService;
+    private final BotService botService;
+    private final StatisticsService statisticsService;
+    private final BlockingQueue<ActionResultBundle> resultsQueue;
+    private final Semaphore semaphore;
 
-    public RunSimulation(BlockingQueue<ActionResultBundle> resultsQueue,
-                         Semaphore semaphore,
-                         LifeSimulatorService lifeSimulatorService) {
-        this.simulatorContext = SimulatorContext.getInstance();
+    public RunSimulation(final BlockingQueue<ActionResultBundle> resultsQueue,
+                         final Semaphore semaphore,
+                         final LifeSimulatorService lifeSimulatorService) {
         this.botService = new BotService();
         this.resultsQueue = resultsQueue;
         this.lifeSimulatorService = lifeSimulatorService;
@@ -50,34 +48,34 @@ public class RunSimulation implements Runnable {
     }
 
     private void handleBotActions() throws InterruptedException {
-        final List<SingleBot> bots = simulatorContext.getBots();
+        final List<SingleBot> bots = SimulatorContext.getInstance().getBots();
         Collections.shuffle(bots);
-        final ListIterator<SingleBot> singleBotListIterator = bots.listIterator();
-        while (singleBotListIterator.hasNext()) {
+        final ListIterator<SingleBot> botsListIterator = bots.listIterator();
+        while (botsListIterator.hasNext()) {
             final ActionResultBundle actionResultBundle = new ActionResultBundle();
             if (bots.size() <= Constants.BOT_MIN_NUMBER) {
-                int generationNumber = simulatorContext.getGenerationCounter().incrementAndGet();
+                int generationNumber = SimulatorContext.getInstance().incrementAndGetGenerationCounter();
                 statisticsService.writeDataToFile(bots, generationNumber);
                 botService.updateStatisticsResults(bots, generationNumber, actionResultBundle);
-                botService.handleNewBotsCreation(singleBotListIterator, actionResultBundle);
+                botService.handleNewBotsCreation(botsListIterator, actionResultBundle);
                 resultsQueue.put(actionResultBundle);
                 break;
             }
-            final SingleBot singleBot = singleBotListIterator.next();
+            final SingleBot singleBot = botsListIterator.next();
             this.executeCommand(singleBot, actionResultBundle);
-            botService.handleBotDeathOrAction(singleBot, singleBotListIterator, actionResultBundle);
+            botService.handleBotDeathOrAction(singleBot, botsListIterator, actionResultBundle);
             resultsQueue.put(actionResultBundle);
         }
     }
 
     private void executeCommand(final SingleBot singleBot, final ActionResultBundle actionResultBundle) {
-        Cell[][] cellsArray = simulatorContext.getCellsArray();
-        boolean isTerminalOperation = botService.handleBotDecisionTaking(singleBot, cellsArray, actionResultBundle);
+        boolean isTerminalOperation = botService.handleBotDecisionTaking(singleBot, actionResultBundle);
         if (!isTerminalOperation) {
             int nonTerminalCommandCounter = singleBot.getNonTerminalCommandCounter();
             while(!isTerminalOperation && --nonTerminalCommandCounter > 0) {
-                isTerminalOperation = botService.handleBotDecisionTaking(singleBot, cellsArray, actionResultBundle);
+                isTerminalOperation = botService.handleBotDecisionTaking(singleBot, actionResultBundle);
             }
         }
+        singleBot.setNonTerminalCommandCounter(Constants.BOT_NON_TERMINAL_COMMAND_COUNTER_MAX);
     }
 }

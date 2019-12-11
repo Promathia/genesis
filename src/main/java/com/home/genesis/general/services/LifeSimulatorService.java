@@ -17,7 +17,7 @@ import java.util.concurrent.Semaphore;
 
 public class LifeSimulatorService {
 
-    private WorldViewController worldViewController;
+    private final WorldViewController worldViewController;
     private int pauseTimeBetweenActions = Constants.DEFAULT_PAUSE_BETWEEN_BOT_ACTIONS;
 
     private final BlockingQueue<ActionResultBundle> resultsQueue = new LinkedBlockingQueue<>(Constants.UPDATE_QUEUE_CAPACITY);
@@ -25,7 +25,7 @@ public class LifeSimulatorService {
 
     public LifeSimulatorService() {
         this.worldViewController = new WorldViewController(
-                SimulatorContext.getInstance().getInitialCells(),
+                SimulatorContext.getInstance().getCellsArray(),
                 SimulatorContext.getInstance().getInitialGenome(),
                 semaphore,
                 pauseTimeBetweenActions);

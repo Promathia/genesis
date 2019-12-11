@@ -22,7 +22,7 @@ public class SingleBot extends Cell {
         this.dnaCommands.addAll(sourceDNSCommands);
         this.direction = 0;
         this.health = Constants.BOT_INITIAL_HEALTH;
-        this.currentStep = ThreadLocalRandom.current().nextInt(Constants.BOT_DNA_COMMANDS);
+        this.currentStep = 0;
         this.nonTerminalCommandCounter = Constants.BOT_NON_TERMINAL_COMMAND_COUNTER_MAX;
         this.actionsCounter = 0;
     }
