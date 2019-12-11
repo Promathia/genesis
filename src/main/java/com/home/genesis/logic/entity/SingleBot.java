@@ -17,21 +17,20 @@ public class SingleBot extends Cell {
     private int actionsCounter;
     private int nonTerminalCommandCounter;
 
-    public SingleBot(List<Integer> sourceDNSCommands, int positionX, int positionY) {
+    public SingleBot(final int positionX, final int positionY, final SingleBot singleBot) {
         super(positionX, positionY, CellType.BOT);
-        this.dnaCommands.addAll(sourceDNSCommands);
-        this.direction = 0;
+        this.dnaCommands.addAll(singleBot.getDnaCommands());
+        this.direction = ThreadLocalRandom.current().nextInt(8);
         this.health = Constants.BOT_INITIAL_HEALTH;
-        this.currentStep = 0;
+        this.currentStep = singleBot.getCurrentStep();
         this.nonTerminalCommandCounter = Constants.BOT_NON_TERMINAL_COMMAND_COUNTER_MAX;
         this.actionsCounter = 0;
     }
 
     public SingleBot(int positionX, int positionY) {
         super(positionX, positionY, CellType.BOT);
-        final Random random = new Random(System.currentTimeMillis());
         for (int i = 0; i < Constants.BOT_DNA_COMMANDS; i++) {
-            int command = random.nextInt(Constants.BOT_DNA_COMMANDS);
+            int command = ThreadLocalRandom.current().nextInt(Constants.BOT_DNA_COMMANDS);
             dnaCommands.add(command);
         }
         this.direction = 0;

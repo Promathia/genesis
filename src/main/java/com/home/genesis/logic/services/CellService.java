@@ -6,6 +6,7 @@ import com.home.genesis.logic.context.SimulatorContext;
 import com.home.genesis.logic.entity.*;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CellService {
 
@@ -25,15 +26,14 @@ public class CellService {
     }
 
     public Cell generateRandomCellByType(final CellType cellType) {
-        final Random random = new Random();
         Cell[][] cellsArray = SimulatorContext.getInstance().getCellsArray();
         Cell newCell = null;
         int initialX;
         int initialY;
         boolean cellGenerated = false;
         do {
-            initialX = random.nextInt(Constants.CELL_NUMBER_X);
-            initialY = random.nextInt(Constants.CELL_NUMBER_Y);
+            initialX = ThreadLocalRandom.current().nextInt(Constants.CELL_NUMBER_X);
+            initialY = ThreadLocalRandom.current().nextInt(Constants.CELL_NUMBER_Y);
             Cell cell = cellsArray[initialX][initialY];
             if (cell.getCellType() == CellType.EMPTY) {
                 newCell = this.createCell(initialX, initialY, cellType);
@@ -44,13 +44,12 @@ public class CellService {
     }
 
     public Cell getRandomEmptyCell() {
-        final Random random = new Random(System.currentTimeMillis());
         Cell[][] cellsArray = SimulatorContext.getInstance().getCellsArray();
         Cell cell;
         boolean cellFound = false;
         do {
-            int x = random.nextInt(Constants.CELL_NUMBER_X);
-            int y = random.nextInt(Constants.CELL_NUMBER_Y);
+            int x = ThreadLocalRandom.current().nextInt(Constants.CELL_NUMBER_X);
+            int y = ThreadLocalRandom.current().nextInt(Constants.CELL_NUMBER_Y);
             cell = cellsArray[x][y];
             if (cell.getCellType() == CellType.EMPTY) {
                 cellFound = true;

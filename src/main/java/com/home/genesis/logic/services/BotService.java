@@ -9,6 +9,7 @@ import com.home.genesis.logic.entity.results.ActionResultBundle;
 import com.home.genesis.representation.Styles;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static com.home.genesis.Constants.DEFAULT_ACTION_NUMBER;
 
@@ -76,7 +77,7 @@ public class BotService {
         });
     }
 
-    private void copyBots(final SingleBot bot,
+    private void copyBots(final SingleBot sourceBot,
                           final ListIterator<SingleBot> singleBotListIterator,
                           final ActionResultBundle actionResultBundle,
                           int genomeModificationCounter) {
@@ -87,7 +88,7 @@ public class BotService {
             final Cell cell = cellService.getRandomEmptyCell();
             final int positionX = cell.getPositionX();
             final int positionY = cell.getPositionY();
-            SingleBot copiedBot = new SingleBot(bot.getDnaCommands(), positionX, positionY);
+            SingleBot copiedBot = new SingleBot(positionX, positionY, sourceBot);
             if (genomeModificationCounter < Constants.MAX_MUTATIONS_PER_GENERATION && tryToModifyGenome(copiedBot)) {
                 genomeModificationCounter++;
             }
@@ -106,11 +107,10 @@ public class BotService {
     }
 
     private boolean tryToModifyGenome(final SingleBot bot) {
-        final Random random = new Random(System.currentTimeMillis());
-        final boolean doChange = random.nextBoolean();
+        final boolean doChange = ThreadLocalRandom.current().nextBoolean();
         if (doChange) {
-            final int commandNumber = random.nextInt(Constants.BOT_DNA_COMMANDS);
-            final int commandValue = random.nextInt(Constants.BOT_DNA_COMMANDS);
+            final int commandNumber = ThreadLocalRandom.current().nextInt(Constants.BOT_DNA_COMMANDS);
+            final int commandValue = ThreadLocalRandom.current().nextInt(Constants.BOT_DNA_COMMANDS);
             bot.getDnaCommands().set(commandNumber, commandValue);
         }
         return doChange;
